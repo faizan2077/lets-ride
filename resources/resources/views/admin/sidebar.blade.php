@@ -1,0 +1,230 @@
+
+
+
+
+<!-- partial:partials/_sidebar.html -->
+<nav class="sidebar sidebar-offcanvas" id="sidebar">
+    <ul class="nav">
+      <li class="nav-item">
+        <a class="nav-link" href="{{ route('view-customer') }}">
+          <i class="typcn typcn-user-add-outline menu-icon"></i>
+          <span class="menu-title">Rider Details</span>
+          {{-- <div class="badge badge-danger">new</div> --}}
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+          <i class="typcn typcn-document-text menu-icon"></i>
+          <span class="menu-title">Bus Details</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="ui-basic">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link" href="{{ route('add-buses-management') }}">Add Buses</a></li>
+            <li class="nav-item"> <a class="nav-link" href="{{ route('buses-management') }}">View Buses</a></li>
+            {{-- <li class="nav-item"> <a class="nav-link" href="pages/ui-features/typography.html">Typography</a></li> --}}
+          </ul>
+        </div>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="collapse" href="#charts" aria-expanded="false" aria-controls="charts">
+          <i class="typcn typcn-chart-pie-outline menu-icon"></i>
+          <span class="menu-title">Driver Management</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="charts">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link" href="{{ route('add-driver') }}">Add Driver</a></li>
+            <li class="nav-item"> <a class="nav-link" href="{{ route('view-driver') }}">View Driver</a></li>
+          </ul>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="collapse" href="#tables" aria-expanded="false" aria-controls="tables">
+          <i class="typcn typcn-th-small-outline menu-icon"></i>
+          <span class="menu-title">Booking Details</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="tables">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link" href="{{ route('add-bookings') }}">Add Bookings</a></li>
+            <li class="nav-item"> <a class="nav-link" href="{{ route('view-bookings') }}">View Bookings</a></li>
+            <li class="nav-item"> <a class="nav-link" href="{{ route('view-passenger-details') }}">View Passengers</a></li>
+          </ul>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="collapse" href="#icons" aria-expanded="false" aria-controls="icons">
+          <i class="typcn typcn-compass menu-icon"></i>
+          <span class="menu-title">Bus Routes</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="icons">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link" href="{{ route('add-routes') }}">Add Routes</a></li>
+            <li class="nav-item"> <a class="nav-link" href="{{ route('view-routes') }}">View Routes</a></li>
+
+          </ul>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
+          <i class="typcn typcn-directions menu-icon"></i>
+          <span class="menu-title">Bus Stops</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="auth">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link" href="{{ route('add-stops') }}">Add Stops</a></li>
+            <li class="nav-item"> <a class="nav-link" href="{{ route('view-stops') }}">View Stops </a></li>
+          </ul>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="collapse" href="#link" aria-expanded="false" aria-controls="link">
+          <i class="typcn typcn-globe-outline menu-icon"></i>
+          <span class="menu-title">Bus Links To Route</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="link">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link" href="{{ route('buss-link-to-route') }}">Add bus link to route </a></li>
+            <li class="nav-item"> <a class="nav-link" href="{{ route('view-buss-link-to-route') }}">View bus link to route </a></li>
+          </ul>
+        </div>
+      </li>
+      
+       <li class="nav-item">
+        <a class="nav-link" data-toggle="collapse" href="#route_stops" aria-expanded="false" aria-controls="link">
+          <i class=" typcn typcn-radar menu-icon"></i>
+          <span class="menu-title">Route stops</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="route_stops">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link" href="{{ route('add-route-stops') }}">Add route stops </a></li>
+            <li class="nav-item"> <a class="nav-link" href="{{ route('view-route-stops') }}">View route stops </a></li>
+          </ul>
+        </div>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="collapse" href="#coupons" aria-expanded="false" aria-controls="coupons">
+          <i class="typcn typcn-ticket menu-icon"></i>
+          <span class="menu-title">Coupons</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="coupons">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link" href="{{ route('add-coupons') }}">Add Coupons</a></li>
+            <li class="nav-item"> <a class="nav-link" href="{{ route('view-coupons') }}">View Coupons </a></li>
+          </ul>
+        </div>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="collapse" href="#seats" aria-expanded="false" aria-controls="seats">
+          <i class="typcn typcn-globe-outline menu-icon"></i>
+          <span class="menu-title">Bus Seats</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="seats">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link" href="{{ route('add-seats') }}">Add Seats</a></li>
+            <li class="nav-item"> <a class="nav-link" href="{{ route('view-seats') }}">View Seats</a></li>
+          </ul>
+        </div>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="collapse" href="#error" aria-expanded="false" aria-controls="error">
+          <i class="typcn typcn-flow-parallel menu-icon"></i>
+          <span class="menu-title">Bus Travel History</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="error">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link" href="{{ route('buses-travel-history') }}">View bus travel history</a></li>
+            {{-- <li class="nav-item"> <a class="nav-link" href="{{ route('view-seats') }}">View Seats</a></li> --}}
+          </ul>
+        </div>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="collapse" href="#subscription" aria-expanded="false" aria-controls="subscription">
+          <i class="typcn typcn-globe-outline menu-icon"></i>
+          <span class="menu-title">Subscriptions Details</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="subscription">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link" href="{{ route('subscription-details') }}">Subscription Details</a></li>
+            {{-- <li class="nav-item"> <a class="nav-link" href="{{ route('view-seats') }}">View Seats</a></li> --}}
+          </ul>
+        </div>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="collapse" href="#payment" aria-expanded="false" aria-controls="payment">
+          <i class="typcn typcn-credit-card menu-icon"></i>
+          <span class="menu-title">Payment Details</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="payment">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link" href="{{ route('e-payment-system') }}">E Payments system</a></li>
+            {{-- <li class="nav-item"> <a class="nav-link" href="{{ route('view-seats') }}">View Seats</a></li> --}}
+          </ul>
+        </div>
+      </li>
+
+ <li class="nav-item">
+        <a class="nav-link" data-toggle="collapse" href="#faq" aria-expanded="false" aria-controls="payment">
+          <i class="typcn typcn-messages menu-icon"></i>
+          <span class="menu-title">Customer Faq</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="faq">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link" href="{{ route('add-faq') }}">Add Faq's</a></li>
+            <li class="nav-item"> <a class="nav-link" href="{{ route('view-faq') }}">View Faq's</a></li>
+            {{-- <li class="nav-item"> <a class="nav-link" href="{{ route('view-seats') }}">View Seats</a></li> --}}
+          </ul>
+        </div>
+      </li>
+
+
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="collapse" href="#safety" aria-expanded="false" aria-controls="payment">
+          <i class="typcn typcn-globe-outline menu-icon"></i>
+          <span class="menu-title">Safety</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="safety">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link" href="{{ route('add-safety') }}">Add Safety</a></li>
+            <li class="nav-item"> <a class="nav-link" href="{{ route('view-safety') }}">View Safety</a></li>
+            {{-- <li class="nav-item"> <a class="nav-link" href="{{ route('view-seats') }}">View Seats</a></li> --}}
+          </ul>
+        </div>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="collapse" href="#Help" aria-expanded="false" aria-controls="payment">
+          <i class="typcn typcn-globe-outline menu-icon"></i>
+          <span class="menu-title">Help</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="Help">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link" href="{{ route('contact-us') }}">View contact us</a></li>
+
+          </ul>
+        </div>
+      </li>
+
+
+    </ul>
+  </nav>
+
