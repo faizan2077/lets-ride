@@ -43,11 +43,8 @@
                                     <table class="table table-striped project-orders-table">
                                         <thead>
                                             <tr>
-
                                                 <th scope="col">Sr.no</th>
-                                                <th scope="col">Id</th>
                                                 <th scope="col">Title</th>
-                                                <th scope="col">Short title</th>
                                                 <th scope="col">Latitude</th>
                                                 <th scope="col">Longitude</th>
                                                 <th scope="col">Status</th>
@@ -60,28 +57,34 @@
                                             @foreach ($stops as $stops)
                                                 @php($count++)
                                                 <tr>
-
                                                     <td>{{ $count }}</td>
-                                                    <td>{{ $stops->id }}</td>
                                                     <td>{{ $stops->title }}</td>
-                                                    <td>{{ $stops->short_title }}</td>
                                                     <td>{{ $stops->latitude }}</td>
                                                     <td>{{ $stops->longitude }}</td>
-                                                    <td>{{ $stops->status }}</td>
+                                                    <td>{{ $stops->status === 1 ? 'Active' : 'Unactive' }}</td>
                                                     <td>{{ $stops->created_at }}</td>
                                                     <td>
                                                         <a class="btn btn-success btn-sm btn-icon-text "
-                                                            href="{{ route('edit-stops', ['id' => $stops->id]) }}"><span class="material-symbols-outlined">
+                                                            href="{{ route('edit-stops', ['id' => $stops->id]) }}"><span
+                                                                class="material-symbols-outlined">
                                                                 edit
-                                                                </span></a>
-                                                        <a class="btn btn-danger btn-sm btn-icon-text delete-confirm"
-                                                            href="{{ route('delete-stops', ['id' => $stops->id]) }}"><span class="material-symbols-outlined">
-                                                                delete
                                                             </span></a>
+                                                        <a class="btn btn-danger btn-sm btn-icon-text delete-confirm"
+                                                            href="{{ route('delete-stops', ['id' => $stops->id]) }}"><span
+                                                                class="material-symbols-outlined">
+                                                                delete
+                                                            </span>
+                                                        </a>
+                                                        <a class="btn btn-primary btn-sm" target="_blank"
+                                                            href="https://www.google.com/maps/search/?api=1&query={{ $stops->latitude }},{{ $stops->longitude }}" "><span
+                                                                class="material-symbols-outlined" >
+                                                                map
+                                                            </span>
+                                                        </a>
                                                     </td>
 
                                                 </tr>
-                                            @endforeach
+ @endforeach
 
                                         </tbody>
                                     </table>

@@ -25942,9 +25942,12 @@ heading{
   font-size: 2rem;
   margin-bottom: 0px;
   font-weight: bold;
-  text-decoration: underline;
-  text-decoration-color: #844FC1;
+  /* text-decoration: underline;
+  text-decoration-color: #844FC1; */
   line-height: 2;
+}
+heading::after {
+  content: ":";
 }
 .form_styling {
   padding: 23px 37px;

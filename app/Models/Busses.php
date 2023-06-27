@@ -24,6 +24,7 @@ class Busses extends Model
         'route_completeion_time',
         'stops_route_of_the_bus',
         'is_airconditioned',
+        'seats',
         'per_stop_fare',
         'starting_latLng',
         'ending_latLng',

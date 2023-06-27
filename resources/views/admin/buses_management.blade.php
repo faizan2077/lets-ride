@@ -29,7 +29,7 @@
                 <div class="content-wrapper">
 
                     @if (session()->has('message'))
-                        <div class="alert alert-danger">
+                        <div class="alert alert-danger message">
                             {{ session()->get('message') }}
                         </div>
                     @endif
@@ -46,9 +46,8 @@
                                                 <th scope="col">Bus number</th>
                                                 <th scope="col">Starting Point</th>
                                                 <th scope="col">Bus ending point</th>
-                                                <th scope="col">Route completion time</th>
-                                                <th scope="col">Stops route of the bus </th>
-                                                <th scope="col">Driver id</th>
+                                                <th scope="col">Airconditioned</th>
+                                                <th scope="col">Driver Assigned</th>
                                                 <th scope="col">Action</th>
                                             </tr>
                                         </thead>
@@ -59,13 +58,16 @@
                                                 <tr>
                                                     <td>{{ $count }}</td>
                                                     <td>{{ $data->registration_no }}</td>
-                                                    <td>{{ $data->starting_point }}</td>
-                                                    <td>{{ $data->ending_point }}</td>
-                                                    <td>{{ $data->route_completeion_time }}</td>
-                                                    <td>{{ $data->stops_route_of_the_bus }}</td>
-                                                    <td>{{ $data->current_driver_id }}</td>
-                                                    <td><a class="btn btn-danger btn-sm btn-icon-text delete-confirm"
-                                                            href="{{ route('delete-buss', ['id' => $data->id]) }}"><span class="material-symbols-outlined">
+                                                    <td>{{ $data->starting_point ? $data->starting_point : 'N/A' }}
+                                                    </td>
+                                                    <td>{{ $data->ending_point ? $data->ending_point : 'N/A' }}</td>
+                                                    <td>{{ $data->is_airconditioned === 1 ? "Yes" : 'No' }}
+                                                    <td>{{ $data->current_driver_id ? $data->current_driver_id : 'N/A' }}
+                                                    </td>
+                                                    <td>
+                                                        <a class="btn btn-danger btn-sm btn-icon-text delete-confirm"
+                                                            href="{{ route('delete-buss', ['id' => $data->id]) }}">
+                                                            <span class="material-symbols-outlined">
                                                                 delete
                                                             </span></a>
                                                     </td>
@@ -125,6 +127,15 @@
     <!-- End custom js for this page-->
 
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    @if (session()->has('message'))
+        <script>
+            setTimeout(function() {
+                var successMessage = document.getElementsByClassName('message')[0];
+                successMessage.style.display = 'none';
+            }, 4000);
+        </script>
+    @endif
 
     <script>
         $('.delete-confirm').on('click', function(event) {

@@ -21,6 +21,7 @@ use App\Models\Drivers;
 use App\Models\Routes;
 use App\Models\Safety;
 use App\Models\Seats;
+use Validator;
 
 class DashboardController extends Controller
 {
@@ -234,7 +235,8 @@ class DashboardController extends Controller
 
     public function addRoutes()
     {
-        return view('admin.add_bus_routes');
+        $stopList = DB::table("buss_stops")->where('status' ,1)->get();
+        return view('admin.add_bus_routes', compact('stopList'));
     }
 
     public function viewRoutes()
@@ -306,16 +308,26 @@ public function goAddRouteStops($id)
 
     public function addStop(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'title' => 'required',
+            'latitude' => 'required',
+            'longitude' => 'required',
+            'status',
+        ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+
         $stops = new BussStops();
 
         $stops->title = $request->title;
-        $stops->short_title = $request->short_title;
         $stops->latitude = $request->latitude;
         $stops->longitude = $request->longitude;
-        $stops->status = $request->status;
+        $stops->status = $request->input('status') ?? 0;
         $stops->save();
 
-        return back()->with('message', 'Stop add successfully!');
+        return back()->with('message', 'Stop added successfully!');
     }
 
     public function deleteStops($id)
@@ -580,7 +592,7 @@ public function goAddRouteStops($id)
     
      public function addRouteStops()
     {
-        $stopList = \DB::table("routes")->get();
+        $stopList = DB::table("routes")->get();
         $id ="";
         return view('admin.add_route_stops',compact('stopList','id'));
 

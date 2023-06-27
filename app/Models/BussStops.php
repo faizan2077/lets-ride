@@ -12,7 +12,6 @@ class BussStops extends Model
     protected $fillable = [
         'id',
         'title',
-        'short_title',
         'latitude',
         'longitude',
         'status',

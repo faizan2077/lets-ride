@@ -36,7 +36,7 @@
                 </ul>
             </div>
         </li>
-        <li class="nav-item">
+        {{-- <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#seats" aria-expanded="false" aria-controls="seats">
                 <span class="material-symbols-outlined">
                     airline_seat_recline_extra
@@ -50,24 +50,8 @@
                     <li class="nav-item"> <a class="nav-link" href="{{ route('view-seats') }}">View Seats</a></li>
                 </ul>
             </div>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" data-toggle="collapse" href="#link" aria-expanded="false" aria-controls="link">
-                <span class="material-symbols-outlined">
-                    directions
-                </span>
-                <span class="menu-title px-2">Bus Links To Route</span>
-                <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="link">
-                <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"> <a class="nav-link" href="{{ route('buss-link-to-route') }}">Add bus link
-                            to route </a></li>
-                    <li class="nav-item"> <a class="nav-link" href="{{ route('view-buss-link-to-route') }}">View bus
-                            link to route </a></li>
-                </ul>
-            </div>
-        </li>
+        </li> --}}
+       
 
         <span class="border"></span>
         <li class="nav-item">
@@ -99,6 +83,23 @@
                 <ul class="nav flex-column sub-menu">
                     <li class="nav-item"> <a class="nav-link" href="{{ route('add-routes') }}">Add Routes</a></li>
                     <li class="nav-item"> <a class="nav-link" href="{{ route('view-routes') }}">View Routes</a></li>
+                </ul>
+            </div>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#link" aria-expanded="false" aria-controls="link">
+                <span class="material-symbols-outlined">
+                    directions
+                </span>
+                <span class="menu-title px-2">Bus Links To Route</span>
+                <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="link">
+                <ul class="nav flex-column sub-menu">
+                    <li class="nav-item"> <a class="nav-link" href="{{ route('buss-link-to-route') }}">Add bus link
+                            to route </a></li>
+                    <li class="nav-item"> <a class="nav-link" href="{{ route('view-buss-link-to-route') }}">View bus
+                            link to route </a></li>
                 </ul>
             </div>
         </li>
