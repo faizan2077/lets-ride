@@ -48,7 +48,9 @@
                                             <tr>
                                                 <th scope="col">Sr.no</th>
                                                 <th scope="col">Title</th>
-                                                <th scope="col">Code</th>
+                                                <th scope="col">Starting Point</th>
+                                                <th scope="col">Ending Point</th>
+                                                <th scope="col">Stops</th>
                                                 <th scope="col">Status</th>
                                                 <th scope="col">Created at</th>
                                                 <th scope="col">Action</th>
@@ -57,26 +59,28 @@
                                         <tbody>
 
                                             @php($count = 0)
-                                            @foreach ($routes as $routes)
+                                            @foreach ($routes as $route)
                                                 @php($count++)
 
                                                 <tr>
                                                     <td>{{ $count }}</td>
-                                                    <td>{{ $routes->title }}</td>
-                                                    <td>{{ $routes->code }}</td>
-                                                    <td>{{ $routes->status }}</td>
-                                                    <td>{{ $routes->created_at }}</td>
+                                                    <td>{{ $route->title }}</td>
+                                                    <td>{{ $route->starting_point }}</td>
+                                                    <td>{{ $route->ending_point }}</td>
+                                                    <td>{{ $route->stops_list }}</td>
+                                                    <td>{{ $route->status === 1 ? "Active": "UnActive" }}</td>
+                                                    <td>{{ $route->created_at }}</td>
                                                     <td>
                                                         <a class="btn btn-success btn-sm btn-icon-text "
-                                                            href="{{ route('edit-routes', ['id' => $routes->id]) }}"><span class="material-symbols-outlined">
+                                                            href="{{ route('edit-routes', ['id' => $route->id]) }}"><span class="material-symbols-outlined">
                                                                 edit
                                                                 </span></a>
                                                         <a class="btn btn-danger btn-sm btn-icon-text delete-confirm"
-                                                            href="{{ route('delete-routes', ['id' => $routes->id]) }}"><span class="material-symbols-outlined">
+                                                            href="{{ route('delete-routes', ['id' => $route->id]) }}"><span class="material-symbols-outlined">
                                                                 delete
                                                             </span></a>
                                                         <a class="btn btn-primary btn-sm btn-icon-text "
-                                                            href="{{ route('go-add-route-stops', ['id' => $routes->id]) }}"><i
+                                                            href="{{ route('go-add-route-stops', ['id' => $route->id]) }}"><i
                                                                 class="typcn typcn-add-outline btn-icon-append">Add
                                                                 route stops</i></a>
                                                     </td>

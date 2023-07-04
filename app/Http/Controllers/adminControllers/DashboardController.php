@@ -17,10 +17,12 @@ use App\Models\RouteStops;
 use App\Models\ContactUs;
 use App\Models\Coupon;
 use App\Models\CustomerFaq;
+use App\Models\Busses;
 use App\Models\Drivers;
 use App\Models\Routes;
 use App\Models\Safety;
 use App\Models\Seats;
+use SebastianBergmann\CodeCoverage\Driver\Driver;
 use Validator;
 
 class DashboardController extends Controller
@@ -43,11 +45,11 @@ class DashboardController extends Controller
 
 
 
-    function checkLogin(Request $request) {
+    function checkLogin(Request $request)
+    {
 
         if (\Auth::check()) {
             return redirect("/manage-admin/view_customer");
-
         }
 
         $this->validate($request, [
@@ -79,14 +81,14 @@ class DashboardController extends Controller
     {
         $user = Customers::get();
         $count = Customers::count();
-        return view('admin.view_customer',compact('user','count'));
+        return view('admin.view_customer', compact('user', 'count'));
     }
 
     public function deleteCustomer($id)
     {
-        $user=Customers::find($id);
+        $user = Customers::find($id);
         $user->delete();
-        return back()->with('message','Customer deleted sucessfully!');
+        return back()->with('message', 'Customer deleted sucessfully!');
     }
 
     public function addDriver()
@@ -112,7 +114,7 @@ class DashboardController extends Controller
         $request->license_image->storeAs('public/driver license', $licenseImageName);
 
 
-        $driver =new Drivers();
+        $driver = new Drivers();
 
         $driver->name = $request->name;
         $driver->email = $request->email;
@@ -128,28 +130,28 @@ class DashboardController extends Controller
 
         $driver->save();
 
-        return back()->with('message','driver add successfully!');
+        return back()->with('message', 'driver add successfully!');
     }
 
     public function viewDriver()
     {
-        $drivers = Drivers::where('verify_identity_st','accepted')->get();
+        $drivers = Drivers::where('verify_identity_st', 'accepted')->get();
 
-        $pendingDriver = Drivers::where('verify_identity_st','pending')->get();
-        $availableDriver = Drivers::where('driver_st','available')->get();
+        $pendingDriver = Drivers::where('verify_identity_st', 'pending')->get();
+        $availableDriver = Drivers::where('driver_st', 'available')->get();
 
 
-        return view('admin.view_drivers',compact('drivers','pendingDriver','availableDriver'));
+        return view('admin.view_drivers', compact('drivers', 'pendingDriver', 'availableDriver'));
     }
 
     public function availableDriver(Request $request)
     {
 
         $driver = Drivers::findOrFail($request->driver_id);
-    $driver->driver_st = $request->driver_st;
-    $driver->save();
+        $driver->driver_st = $request->driver_st;
+        $driver->save();
 
-        return back()->with('message','Status changed successfully!');
+        return back()->with('message', 'Status changed successfully!');
     }
 
     public function approveDriver($id)
@@ -160,8 +162,7 @@ class DashboardController extends Controller
         $acceptDriver->rejected_message = null;
         $acceptDriver->save();
 
-        return back()->with('message','Your driver approved successfully!');
-
+        return back()->with('message', 'Your driver approved successfully!');
     }
 
     public function rejectDriver(Request $request, $id)
@@ -171,8 +172,7 @@ class DashboardController extends Controller
         $rejectDriver->rejected_message = $request->rejected_message;
         $rejectDriver->save();
 
-        return back()->with('message','Your driver rejected successfully!');
-
+        return back()->with('message', 'Your driver rejected successfully!');
     }
 
 
@@ -181,7 +181,7 @@ class DashboardController extends Controller
     {
         $driver = Drivers::find($id);
         $driver->delete();
-        return back()->with('message','Driver deleted sucessfully!');
+        return back()->with('message', 'Driver deleted sucessfully!');
     }
 
     public function addBookings()
@@ -191,7 +191,7 @@ class DashboardController extends Controller
 
     public function bookingAdd(Request $request)
     {
-        $booking =new Bookings();
+        $booking = new Bookings();
         $booking->ticket_no = $request->ticket_no;
         $booking->buss_id = $request->buss_id;
         $booking->pickup_buss_stop_id = $request->pickup_buss_stop_id;
@@ -205,54 +205,70 @@ class DashboardController extends Controller
 
         $booking->save();
 
-        return back()->with('message','bookings add successfully!');
+        return back()->with('message', 'bookings add successfully!');
     }
 
     public function viewBookings()
     {
         $bookings = Bookings::get();
-        return view('admin.view_bookings',compact('bookings'));
+        return view('admin.view_bookings', compact('bookings'));
     }
 
     public function deleteBookings($id)
     {
         $bookings = Bookings::find($id)->delete();
-        return back()->with('message','Booking deleted sucessfully!');
-
+        return back()->with('message', 'Booking deleted sucessfully!');
     }
 
     public function viewPassengerDetails()
     {
         $passengerDetails = BookingDetails::get();
-        return view('admin.passenger_details',compact('passengerDetails'));
+        return view('admin.passenger_details', compact('passengerDetails'));
     }
 
     public function deletePassengerDetails($id)
     {
         $passengerDetails = BookingDetails::find($id)->delete();
-        return back()->with('message','Passenger deleted sucessfully!');
+        return back()->with('message', 'Passenger deleted sucessfully!');
     }
 
     public function addRoutes()
     {
-        $stopList = DB::table("buss_stops")->where('status' ,1)->get();
+        $stopList = DB::table("buss_stops")->where('status', 1)->get();
         return view('admin.add_bus_routes', compact('stopList'));
     }
 
     public function viewRoutes()
     {
         $routes = Routes::get();
-        return view('admin.view_bus_routes',compact('routes'));
+        foreach ($routes as $route) {
+            $route->starting_point = DB::table("buss_stops")->where('id', $route->starting_point)->value("title");
+            $route->ending_point = DB::table("buss_stops")->where('id', $route->ending_point)->value("title");
+
+            $exploded_stop_list = explode(',', $route->stops_list);
+            $newStops = [];
+            foreach ($exploded_stop_list as $stop) {
+                $newStop = DB::table("buss_stops")->where('id', $stop)->value("title");
+                $newStops[] = $newStop;
+            }
+            $route->stops_list = implode(', ', $newStops);
+        }
+
+        return view('admin.view_bus_routes', compact('routes'));
     }
+
+
 
 
     public function addRoute(Request $request)
     {
+        $imploded_list = implode(',', $request->stops_list);
         $routes = new Routes();
-
         $routes->title = $request->title;
-        $routes->code = $request->code;
-        $routes->status = $request->status;
+        $routes->starting_point = $request->starting_point;
+        $routes->ending_point = $request->ending_point;
+        $routes->stops_list = $imploded_list;
+        $routes->status = $request->input('status') ?? 0;
         $routes->save();
 
         return back()->with('message', 'Route add successfully!');
@@ -260,21 +276,26 @@ class DashboardController extends Controller
 
     public function deleteRoutes($id)
     {
-        $routes = Routes::find($id)->delete();
-        return back()->with('message','Route deleted sucessfully!');
+        $get = Routes::find($id);
+        if ($get) {
+            $get->delete();
 
+            return back()->with('message', 'Route deleted sucessfully!');
+        } else {
+            return back()->with('message', 'not found!');
+        }
     }
-    
-     public function editRoutes($id)
+
+    public function editRoutes($id)
     {
         $editRoute = Routes::find($id);
 
-        return view('admin.edit_bus_routes',compact('editRoute'));
+        return view('admin.edit_bus_routes', compact('editRoute'));
     }
 
-    public function updateRoute(Request $request,$id)
+    public function updateRoute(Request $request, $id)
     {
-        $routes =Routes::find($id);
+        $routes = Routes::find($id);
 
         $routes->title = $request->title;
         $routes->code = $request->code;
@@ -284,17 +305,17 @@ class DashboardController extends Controller
     }
 
 
-public function goAddRouteStops($id)
+    public function goAddRouteStops($id)
     {
         // Retrieve the necessary data for the dropdown menu, e.g., options
         // dd($id);
         $stopList = Routes::get();
-        return view('admin.add_route_stops',compact('stopList'), [
+        return view('admin.add_route_stops', compact('stopList'), [
             'id' => $id,
             // 'options' => $options,
         ]);
     }
-    
+
     public function addStops()
     {
         return view('admin.add_bus_stops');
@@ -303,7 +324,7 @@ public function goAddRouteStops($id)
     public function viewStops()
     {
         $stops = BussStops::get();
-        return view('admin.view_bus_stops',compact('stops'));
+        return view('admin.view_bus_stops', compact('stops'));
     }
 
     public function addStop(Request $request)
@@ -333,18 +354,17 @@ public function goAddRouteStops($id)
     public function deleteStops($id)
     {
         $routes = BussStops::find($id)->delete();
-        return back()->with('message','Stop deleted sucessfully!');
-
+        return back()->with('message', 'Stop deleted sucessfully!');
     }
-    
+
     public function editStops($id)
     {
         $editStop = BussStops::find($id);
         // dd($editStop);
-        return view('admin.edit_buss_stops',compact('editStop'));
+        return view('admin.edit_buss_stops', compact('editStop'));
     }
 
-    public function updateStops(Request $request,$id)
+    public function updateStops(Request $request, $id)
     {
         $stops = BussStops::find($id);
 
@@ -360,7 +380,10 @@ public function goAddRouteStops($id)
 
     public function bussLinktoRoute()
     {
-        return view('admin.buss_link_to_route');
+        $routes = Routes::where("assigned", 0)->get(['id', 'title']);
+        $busses = Busses::where("assigned", 0)->get(['id', 'registration_no']);
+        $drivers = Drivers::where('status', 1)->where('available', 0)->get(['id', 'name']);
+        return view('admin.buss_link_to_route', compact('busses', 'routes', 'drivers'));
     }
 
     public function addBussLinktoRoute(Request $request)
@@ -369,46 +392,106 @@ public function goAddRouteStops($id)
             'buss_id' => "required|exists:busses,id",
             'route_id' => "required|exists:routes,id",
             'driver_id' => "required||exists:drivers,id",
-          ));
+        ));
 
-        $bussRouteDetail = BussesRouteDetails::where([
-            "buss_id" => $request["buss_id"]
-        ])
-        ->orWhere([
-            "route_id" => $request["route_id"]
-        ])
-        ->first();
+        $bussRouteDetail = BussesRouteDetails::where(["buss_id" => $request["buss_id"]])
+            ->orWhere(["route_id" => $request["route_id"]])
+            ->first();
+
+        $bus = Busses::find($request["buss_id"]);
+        if ($bus) {
+            $bus->current_driver_id = $request["driver_id"];
+            $bus->assigned = 1;
+            $bus->save();
+        }
+        $routes = Routes::find($request["route_id"]);
+        if ($routes) {
+            $routes->assigned = 1;
+            $routes->save();
+        }
+        $driver = Drivers::find($request["driver_id"]);
+        if ($driver) {
+            $driver->available = 1;
+            $driver->save();
+        }
+
 
         if ($bussRouteDetail) {
-        return back()->with('error','This route or buss is already occupied. Please cancel its route or try with another combination.');
+            return back()->with('error', 'This route or bus is already occupied. Please cancel its route or try with another combination.');
         }
 
         if (BussesRouteDetails::create([
             "buss_id" => $request["buss_id"],
             "route_id" => $request["route_id"],
+            "driver_id" => $request["driver_id"],
 
-        ]))
-
-        {
-            return back()->with('message','Route assigned to the buss successfully.');
+        ])) {
+            return back()->with('message', 'Route assigned to the buss successfully.');
         }
 
-            return back()->with('error','Route unable to assign to buss. Something went wrong.');
-
-        }
+        return back()->with('error', 'Route unable to assign to buss. Something went wrong.');
+    }
 
     public function viewBussLinkToRoute()
     {
         $bussRouteDetail = BussesRouteDetails::get();
-        return view('admin.view_buss_link_to_route',compact('bussRouteDetail'));
+        $newArray = []; 
+        foreach ($bussRouteDetail as $index => $busRoute) {
+            $bus = Busses::find($busRoute->buss_id);
+            if ($bus) {
+                $busRoute->buss_id = $bus->registration_no;
+            }
+
+            $driver = Drivers::find($busRoute->driver_id);
+            if ($driver) {
+                $busRoute->driver_id = $driver->name;
+            }
+
+            $route = Routes::find($busRoute->route_id);
+            if ($route) {
+                $busRoute->route_id = $route->title;
+            }
+            $bussRouteDetail2 = BussesRouteDetails::get();
+            $bussRouteDetail2Item = isset($bussRouteDetail2[$index]) ? $bussRouteDetail2[$index] : null;
+            if ($bussRouteDetail2Item) {
+                $attributes2 = $bussRouteDetail2Item->getAttributes();
+                foreach ($attributes2 as $attribute => $attributeValue) {
+                    $newValue = 'new_' . $attribute;
+                    $busRoute->$newValue = $attributeValue;
+                }
+            }
+            $newArray[] = $busRoute;
+        }
+
+
+
+        return view('admin.view_buss_link_to_route', compact('newArray'));
     }
 
-    public function deleteBussLinktoRoute($id)
-        {
-            $bussRouteDetail = BussesRouteDetails::find($id)->delete();
-            return back()->with('message','Buss Link to route deleted sucessfully!');
 
+    public function deleteBussLinktoRoute(Request $request)
+    {
+
+        $specific_bus = Busses::find($request->buss_id)->first();
+        $specific_route = Routes::find($request->route_id)->first();
+        $specific_driver = Drivers::find($request->driver_id)->first();
+
+        if ($specific_bus && $specific_route && $specific_driver &&  $request->id) {
+            $specific_bus->current_driver_id = null;
+            $specific_bus->assigned = 0;
+            $specific_bus->save();
+
+            $specific_route->assigned = 0;
+            $specific_route->save();
+
+            $specific_driver->available = 0;
+            $specific_driver->save();
+
+            BussesRouteDetails::find($request->id)->delete();
         }
+
+        return back()->with('message', 'Buss Link to route deleted sucessfully!');
+    }
 
 
     public function addCoupons()
@@ -419,7 +502,7 @@ public function goAddRouteStops($id)
     public function viewCoupons()
     {
         $coupon = Coupon::get();
-        return view('admin.view_coupons',compact('coupon'));
+        return view('admin.view_coupons', compact('coupon'));
     }
 
     public function addCoupon(Request $request)
@@ -440,7 +523,7 @@ public function goAddRouteStops($id)
     public function deleteCoupons($id)
     {
         $coupon = Coupon::find($id)->delete();
-            return back()->with('message','Coupon deleted sucessfully!');
+        return back()->with('message', 'Coupon deleted sucessfully!');
     }
 
     public function addSeats()
@@ -464,14 +547,13 @@ public function goAddRouteStops($id)
     public function viewSeats()
     {
         $seats = Seats::get();
-        return view('admin.view_seats',compact('seats'));
+        return view('admin.view_seats', compact('seats'));
     }
 
     public function deleteSeats($id)
     {
         $seats = Seats::find($id)->delete();
-        return back()->with('message','Seat deleted sucessfully!');
-
+        return back()->with('message', 'Seat deleted sucessfully!');
     }
 
     public function busesTravelHistory()
@@ -499,7 +581,7 @@ public function goAddRouteStops($id)
     public function customerFaq()
     {
         $getFaq = CustomerFaq::get();
-        return view('admin.view_faq',compact('getFaq'));
+        return view('admin.view_faq', compact('getFaq'));
     }
 
     public function addFaq(Request $request)
@@ -507,7 +589,7 @@ public function goAddRouteStops($id)
         return view('admin.addFaqs');
     }
 
-    public function addQuestion (Request $request)
+    public function addQuestion(Request $request)
     {
         $addQuestion = new CustomerFaq();
 
@@ -516,22 +598,22 @@ public function goAddRouteStops($id)
 
         $addQuestion->save();
 
-        return back()->with('message','Question add successfully!');
+        return back()->with('message', 'Question add successfully!');
     }
 
     public function deleteFaq($id)
     {
         $deleteFaq = CustomerFaq::find($id)->delete();
-        return back()->with('error','Question deleted successfully!');
+        return back()->with('error', 'Question deleted successfully!');
     }
 
     public function editFaq($id)
     {
         $editFaq = CustomerFaq::find($id);
-        return view('admin.edit_faq',compact('editFaq'));
+        return view('admin.edit_faq', compact('editFaq'));
     }
 
-    public function updateFaq($id,Request $request)
+    public function updateFaq($id, Request $request)
     {
         $updateQuestion = CustomerFaq::find($id);
 
@@ -540,13 +622,13 @@ public function goAddRouteStops($id)
 
         $updateQuestion->save();
 
-        return redirect('/manage-admin/view-faq')->with('message','Question updated successfully!');
+        return redirect('/manage-admin/view-faq')->with('message', 'Question updated successfully!');
     }
 
     public function getSaftey()
     {
         $getSafety = Safety::get();
-        return view('admin.view_safety',compact('getSafety'));
+        return view('admin.view_safety', compact('getSafety'));
     }
 
     public function addSafety()
@@ -562,23 +644,23 @@ public function goAddRouteStops($id)
 
         $addSafety->save();
 
-        return back()->with('message','Safety added successfully!');
+        return back()->with('message', 'Safety added successfully!');
     }
 
     public function editSafety($id)
     {
         $editSafety = Safety::find($id);
-        return view('admin.edit_safety',compact('editSafety'));
+        return view('admin.edit_safety', compact('editSafety'));
     }
 
-    public function updateSafety(Request $request,$id)
+    public function updateSafety(Request $request, $id)
     {
         $updateSafety = Safety::find($id);
 
         $updateSafety->saftey_message = $request->saftey_message;
         $updateSafety->save();
 
-        return redirect('/manage-admin/get-safety')->with('message','Safety updated successfully!');
+        return redirect('/manage-admin/get-safety')->with('message', 'Safety updated successfully!');
     }
 
     public function contactUs()
@@ -586,22 +668,21 @@ public function goAddRouteStops($id)
     {
         $getContact = ContactUs::get();
 
-        return view('admin.contact_us',compact('getContact'));
+        return view('admin.contact_us', compact('getContact'));
     }
-    
-    
-     public function addRouteStops()
+
+
+    public function addRouteStops()
     {
         $stopList = DB::table("routes")->get();
-        $id ="";
-        return view('admin.add_route_stops',compact('stopList','id'));
-
+        $id = "";
+        return view('admin.add_route_stops', compact('stopList', 'id'));
     }
 
     public function routeStopsAddWeb(Request $request)
     {
 
-        $routeId =$request->route_id;
+        $routeId = $request->route_id;
         $sortOrder = $request->sort_order;
         foreach ($request->addMoreInputFields as $key => $value) {
             $value['route_id'] = $routeId;
@@ -609,50 +690,49 @@ public function goAddRouteStops($id)
             RouteStops::create($value);
         }
 
-        return back()->with('message','Add route stops successfully!');
+        return back()->with('message', 'Add route stops successfully!');
     }
 
     public function viewRouteStops()
     {
         $getData = DB::table('route_stops')
-                    ->join('routes','routes.id','=','route_stops.route_id')
-                    ->distinct()
-                    // ->join('buss_stops','buss_stops.id','=','route_stops.buss_stop_id')
-                    ->get(['routes.id as route_id','routes.title as route_title']);
+            ->join('routes', 'routes.id', '=', 'route_stops.route_id')
+            ->distinct()
+            // ->join('buss_stops','buss_stops.id','=','route_stops.buss_stop_id')
+            ->get(['routes.id as route_id', 'routes.title as route_title']);
         // dd($getData);
-        return view('admin.view_route_stops',compact('getData'));
+        return view('admin.view_route_stops', compact('getData'));
     }
 
     public function getRouteStops($routeId)
-{
-    $busStops = DB::table('route_stops')
-                    ->join('buss_stops', 'buss_stops.id', '=', 'route_stops.buss_stop_id')
-                    ->where('route_stops.route_id', $routeId)
-                    ->select('route_stops.id','buss_stops.title')
-                    ->get();
+    {
+        $busStops = DB::table('route_stops')
+            ->join('buss_stops', 'buss_stops.id', '=', 'route_stops.buss_stop_id')
+            ->where('route_stops.route_id', $routeId)
+            ->select('route_stops.id', 'buss_stops.title')
+            ->get();
 
-    return view('admin.route_stops', compact('busStops'));
-}
+        return view('admin.route_stops', compact('busStops'));
+    }
 
-public function deleteRouteStop($id)
-{
-    $deleteRouteStop = RouteStops::find($id)->delete();
+    public function deleteRouteStop($id)
+    {
+        $deleteRouteStop = RouteStops::find($id)->delete();
 
-    return back()->with('message','Route Stops deleted successfully!');
-}
+        return back()->with('message', 'Route Stops deleted successfully!');
+    }
 
 
- public function getStopsById()
+    public function getStopsById()
     {
         $getStops = BussStops::get();
-        return response()->json(['code'=>200,'status'=>"success","message"=>"Stops fetched successfully!",'data'=>$getStops]);
-
+        return response()->json(['code' => 200, 'status' => "success", "message" => "Stops fetched successfully!", 'data' => $getStops]);
     }
-    
-     public function routeStopsAdd(Request $request)
+
+    public function routeStopsAdd(Request $request)
     {
 
-        $routeId =$request->route_id;
+        $routeId = $request->route_id;
         $sortOrder = $request->sort_order;
         foreach ($request->addMoreInputFields as $key => $value) {
             $value['route_id'] = $routeId;
@@ -660,7 +740,7 @@ public function deleteRouteStop($id)
             RouteStops::create($value);
         }
 
-        return response()->json(['code'=>200,'status'=>"success",'message'=>"Route stops added successfully!"]);
+        return response()->json(['code' => 200, 'status' => "success", 'message' => "Route stops added successfully!"]);
     }
 
     public function logout()
@@ -668,7 +748,4 @@ public function deleteRouteStop($id)
         auth()->logout();
         return redirect()->route('login');
     }
-
-
-
 }

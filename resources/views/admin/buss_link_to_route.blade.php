@@ -46,23 +46,41 @@
                                 </div>
                             @endif
 
-                            <form class="form_styling"  action="{{ route('add-buss-link-to-route') }}" method="POST">
+                            <form class="form_styling" action="{{ route('add-buss-link-to-route') }}" method="POST">
                                 @csrf
                                 <div class="form-group">
-                                    <label>Bus id</label>
-                                    <input name="buss_id" type="text" class="form-control" placeholder="Enter bus id"
-                                        required>
+                                    <label>Bus No.</label>
+                                    <select class="form-control" required name="buss_id">
+                                        <option value="" selected disabled>Please Select Bus</option>
+                                         @foreach ($busses as $bus)
+                                            <option value={{ $bus->id }}>{{ $bus->registration_no }}</option>
+                                        @endforeach
+                                    </select>
+                                    {{-- <input name="buss_id" type="text" class="form-control" placeholder="Enter bus id"
+                                        required> --}}
                                 </div>
                                 <div class="form-group">
-                                    <label>Route id</label>
-                                    <input name="route_id" type="text" class="form-control"
-                                        placeholder="Enter route id" required>
+                                    <label>Route</label>
+                                    <select class="form-control text-capitalize" required name="route_id">
+                                        <option value="" selected disabled>Please Select Route</option>
+                                        @foreach ($routes as $route)
+                                           <option value={{ $route->id }}>{{ $route->title }}</option>
+                                       @endforeach
+                                   </select>
+                                    {{-- <input name="route_id" type="text" class="form-control"
+                                        placeholder="Enter route id" required> --}}
                                 </div>
 
                                 <div class="form-group">
-                                    <label>Driver id</label>
-                                    <input name="driver_id" type="text" class="form-control"
-                                        placeholder="Enter driver id" required>
+                                    <label>Driver</label>
+                                    <select class="form-control text-capitalize" required name="driver_id">
+                                        <option value="" selected disabled>Please Select Driver</option>
+                                        @foreach ($drivers as $driver)
+                                           <option value={{ $driver->id }}>{{ $driver->name }}</option>
+                                       @endforeach
+                                   </select>
+                                    {{-- <input name="driver_id" type="text" class="form-control"
+                                        placeholder="Enter driver id" required> --}}
                                 </div>
 
 

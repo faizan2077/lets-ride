@@ -12,8 +12,11 @@ class Routes extends Model
     protected $fillable = [
         'id',
         'title',
-        'code',
+        'starting_point',
+        'ending_point',
+        'stops_list',
         'status',
+        'assigned',
         'created_at',
         'updated_at',
     ];

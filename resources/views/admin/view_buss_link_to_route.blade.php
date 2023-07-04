@@ -48,9 +48,9 @@
                                         <thead>
                                             <tr>
                                                 <th scope="col">Sr.no </th>
-                                                <th scope="col">Bus id</th>
-                                                <th scope="col">Route id</th>
-                                                <th scope="col">Driver id</th>
+                                                <th scope="col">Bus No.</th>
+                                                <th scope="col">Route Name</th>
+                                                <th scope="col">Driver Name</th>
                                                 <th scope="col">Created at</th>
                                                 <th scope="col">Action</th>
                                             </tr>
@@ -58,7 +58,7 @@
                                         <tbody>
 
                                             @php($count = 0)
-                                            @foreach ($bussRouteDetail as $data)
+                                            @foreach ($newArray as $data)
                                                 @php($count++)
                                                 <tr>
                                                     <td>{{ $count }}</td>
@@ -67,11 +67,12 @@
                                                     <td>{{ $data->driver_id }}</td>
                                                     <td>{{ $data->created_at }}</td>
                                                     <td><a class="btn btn-danger btn-sm btn-icon-text delete-confirm"
-                                                            href="{{ route('delete-buss-link-to-route', ['id' => $data->id]) }}"><span class="material-symbols-outlined">
+                                                            href="{{ route('delete-buss-link-to-route', ['id' => $data->id, 'buss_id' => $data->new_buss_id, 'route_id' => $data->new_route_id, 'driver_id' => $data->new_driver_id]) }}"">
+                                                            <span class="material-symbols-outlined">
                                                                 delete
-                                                            </span></a>
+                                                            </span>
+                                                        </a>
                                                     </td>
-
                                                 </tr>
                                             @endforeach
 

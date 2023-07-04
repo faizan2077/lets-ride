@@ -9,7 +9,7 @@ use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 
 class Drivers extends Authenticatable {
-    use HasApiTokens,Notifiable;
+    // use HasApiTokens,Notifiable;
     use HasFactory;
 
     protected $guard = 'driver';
