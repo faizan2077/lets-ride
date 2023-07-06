@@ -31,40 +31,26 @@
 </style>
 
 <body>
-
     <div class="container-scroller">
         <!-- partial:partials/_navbar.html -->
-
         {{-- admin header add --}}
         @include('admin.header')
-
         <div class="container-fluid page-body-wrapper">
             <!-- partial:partials/_settings-panel.html -->
             {{-- skins color add --}}
             @include('admin.skins-color')
-
-
-
             {{-- add side bar --}}
-
             @include('admin.sidebar')
-
-
             <div class="main-panel">
                 <div class="content-wrapper">
-
                     @if (session()->has('message'))
                         <div class="alert alert-success">
                             {{ session()->get('message') }}
                         </div>
                     @endif
-
                     <div class="row">
                         <div class="col-md-12">
                             <heading>Add Routes</heading>
-
-
-
                             <form class="form_styling" action="{{ route('add-route') }}" method="POST">
                                 @csrf
                                 <div class="form-group">
@@ -100,7 +86,8 @@
                                         </select>
                                     </div>
                                     <div class="form-group col-6">
-                                        <label>Select Stops <a class="btn btn-info btn-sm" onclick="openStopModal()">Add
+                                        <label>Select Stops &nbsp; - or - &nbsp; <a class="btn btn-info btn-sm"
+                                                onclick="openStopModal()">Add
                                                 New Stop</a></label>
                                         <div class="form-group wrapper_list py-2 px-3 border bg-light">
                                             <div class="d-flex parent_select" id="0">
@@ -116,10 +103,10 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="btn btn-success w-25" type="none" onclick="addOption()">Add +
+                                        <div class="btn btn-success w-25 btn-md" type="none" onclick="addOption()">
+                                            Add +
                                         </div>
                                     </div>
-
                                     <div class="form-group pl-4 col-6 mt-4">
                                         <input class="form-check-input" type="checkbox" name="status" value="1"
                                             id="flexCheckChecked">
@@ -128,15 +115,11 @@
                                         </label>
                                     </div>
                                 </div>
-
-
                                 <br>
-
                                 <div class="form-group">
-                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                    <button type="submit" class="btn btn-primary btn-lg">Submit</button>
                                 </div>
                             </form>
-
                         </div>
                         <div class="w-50 centered-div rounded add_direct_stop d-none">
                             <span class="position-absolute p-2 cursor-pointer" style="top: 0; right:0">
@@ -180,29 +163,24 @@
                             </form>
                         </div>
                     </div>
-
                 </div>
                 @include('admin.footer')
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"
                     integrity="sha512-Eezs+g9Lq4TCCq0wae01s9PuNWzHYoCMkE97e2qdkYthpI0pzC3UGB03lgEHn2XM85hDOUF6qgqqszs+iXU4UA=="
                     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
                 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
                 <script>
-                    let index = 0; // Initialize the index counter
+                    let index = 0;
+
                     function addOption() {
                         const parent = document.getElementsByClassName('parent_select')[0];
 
                         const child = parent.cloneNode(true);
-                        console.log(child)
-                        index++; // Increment the index counter
-
-                        // Assign an ID to the new element
+                        index++;
                         child.id = index;
 
                         parent.insertAdjacentElement('afterend', child);
 
-                        // Sort elements based on their IDs
                         const children = Array.from(parent.parentElement.children);
                         children.sort((a, b) => {
                             const idA = parseInt(a.id);
@@ -214,14 +192,12 @@
                             child.parentElement.appendChild(child);
                         });
 
-                        // Add remove button to the new element
-                        const removeButton = document.createElement('button');
-                        removeButton.className = 'btn btn-danger btn-sm';
+                        const removeButton = document.createElement('a');
                         removeButton.innerHTML = `
-                          <span class="material-symbols-outlined" id="${index}" onclick="removeOption(event)">
-                            remove
-                          </span>
-                        `;
+                           <span class="material-symbols-outlined btn btn-danger btn-sm px-2 mt-2 ml-2" id="${index}" onclick="removeOption(event)">
+                             remove
+                           </span>
+                         `;
                         child.appendChild(removeButton);
                     }
 
@@ -236,9 +212,8 @@
                         onChoose: function(event) {
                             const draggedElement = event.item;
 
-                            // Check if the dragged element is the first element
                             if (draggedElement === dragArea.firstElementChild) {
-                                event.cancel(); // Cancel sorting operation
+                                event.cancel();
                             }
                         }
                     });
@@ -254,22 +229,17 @@
                     }
 
                     // script for ajax stop form submission: 
-                    // Get the form and submit button
                     const form = document.getElementById('stop-form');
                     const submitBtn = document.getElementById('submit-btn');
                     submitBtn.addEventListener('click', (event) => {
-                        event.preventDefault(); // Prevent the default form submission
-
-                        // Create a new FormData object and populate it with the form data
+                        event.preventDefault();
                         const formData = new FormData(form);
 
-                        // Send an AJAX request
                         fetch(form.action, {
                                 method: form.method,
                                 body: formData
                             })
                             .then(response => {
-                                console.log('Form submitted successfully');
                                 closeStopModal();
                                 getStopsAgain();
                                 swal("Stop Added!", "The stop is added successfully!", "success");
@@ -283,14 +253,72 @@
                         fetch('http://localhost:8000/test-stops')
                             .then(response => response.json())
                             .then(data => {
-                                // Handle the fetched data here
-                                console.log(data);
+                                appendOptionsToSelect(data.data);
                             })
                             .catch(error => {
-                                // Handle any errors that occur during the fetch
                                 console.error('Error:', error);
                             });
 
+                    }
+
+                    function appendOptionsToSelect(data) {
+                        const selectElements = document.querySelectorAll('select[name="stops_list[]"]');
+                        const lastObject = data[data.length - 1];
+                        const title = lastObject.title;
+                        const id = lastObject.id;
+
+                        const option = document.createElement('option');
+                        option.value = id;
+                        option.textContent = title;
+
+                        selectElements.forEach(selectElement => {
+                            selectElement.appendChild(option.cloneNode(true));
+                        });
+
+                        addDynamicSelect(lastObject);
+                    }
+
+                    function addDynamicSelect(data) {
+                        const {
+                            id,
+                            title
+                        } = data;
+                        const parent = document.getElementsByClassName('parent_select')[0];
+
+                        const child = parent.cloneNode(true);
+                        index++;
+
+                        child.id = index;
+
+                        parent.insertAdjacentElement('afterend', child);
+
+                        const children = Array.from(parent.parentElement.children);
+                        children.sort((a, b) => {
+                            const idA = parseInt(a.id);
+                            const idB = parseInt(b.id);
+                            return idA - idB;
+                        });
+
+                        children.forEach((child) => {
+                            child.parentElement.appendChild(child);
+                        });
+
+                        const removeButton = document.createElement('a');
+                        removeButton.innerHTML = `
+                           <span class="material-symbols-outlined btn btn-danger btn-sm px-2 mt-2 ml-2" id="${index}" onclick="removeOption(event)">
+                             remove
+                           </span>
+                         `;
+                        child.appendChild(removeButton);
+
+                        const select = child.getElementsByTagName('select')[0];
+                        const options = select.getElementsByTagName('option');
+                        for (let i = 0; i < options.length; i++) {
+                            if (options[i].innerHTML === title) {
+                                options[i].selected = true;
+                                break;
+                            }
+                        }
                     }
                 </script>
 
