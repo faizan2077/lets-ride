@@ -8,6 +8,26 @@
     .hamburger {
         cursor: grab;
     }
+
+    .centered-div {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 1030;
+        border: 2px solid rgb(0, 0, 0, 0.3);
+        padding: 20px;
+        background-color: #d8c0ff;
+        box-shadow: 0 3px 12px -3px;
+    }
+
+    .cursor-pointer {
+        cursor: pointer;
+    }
 </style>
 
 <body>
@@ -80,7 +100,8 @@
                                         </select>
                                     </div>
                                     <div class="form-group col-6">
-                                        <label>Add Stops</label>
+                                        <label>Select Stops <a class="btn btn-info btn-sm" onclick="openStopModal()">Add
+                                                New Stop</a></label>
                                         <div class="form-group wrapper_list py-2 px-3 border bg-light">
                                             <div class="d-flex parent_select" id="0">
                                                 <span class="material-symbols-outlined m-3 hamburger">menu</span>
@@ -95,7 +116,8 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="btn btn-success w-25" onclick="addOption()">Add +</div>
+                                        <div class="btn btn-success w-25" type="none" onclick="addOption()">Add +
+                                        </div>
                                     </div>
 
                                     <div class="form-group pl-4 col-6 mt-4">
@@ -107,6 +129,7 @@
                                     </div>
                                 </div>
 
+
                                 <br>
 
                                 <div class="form-group">
@@ -115,6 +138,47 @@
                             </form>
 
                         </div>
+                        <div class="w-50 centered-div rounded add_direct_stop d-none">
+                            <span class="position-absolute p-2 cursor-pointer" style="top: 0; right:0">
+                                <span class="material-symbols-outlined " onclick="closeStopModal()">
+                                    close
+                                </span>
+                            </span>
+                            @if (session()->has('message'))
+                                <div class="alert alert-success message">
+                                    {{ session()->get('message') }}
+                                </div>
+                            @endif
+                            <h5>Add Stop</h5>
+                            <form class="w-100" id="stop-form" action="{{ route('add-stop') }}" method="POST">
+                                @csrf
+                                <div class="form-group w-100">
+                                    <label>Stop Title</label>
+                                    <input value="{{ old('title') }}" name="title" type="text"
+                                        class="form-control" placeholder="Enter title" required>
+                                </div>
+                                <div class="form-group w-100">
+                                    <label>Latitude</label>
+                                    <input name="latitude" value="{{ old('latitude') }}" step="0.000001" type="number"
+                                        class="form-control" min="-90" max="90" placeholder="Enter Latitude"
+                                        required>
+                                </div>
+                                <div class="form-group w-100">
+                                    <label>Longitude</label>
+                                    <input name="longitude" value="{{ old('longitude') }}" step="0.000001"
+                                        type="number" class="form-control" min="-180" max="180"
+                                        placeholder="Enter Longitude" required>
+                                </div>
+                                <div class="form-group ml-4">
+                                    <input class="form-check-input" type="checkbox" name="status" value="1"
+                                        id="flexCheckChecked">
+                                    <label class="form-check-label" for="flexCheckChecked">Active Status</label>
+                                </div>
+                                <div class="form-group p-0 m-0">
+                                    <button type="button" id="submit-btn" class="btn btn-primary">Submit</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
 
                 </div>
@@ -122,6 +186,8 @@
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"
                     integrity="sha512-Eezs+g9Lq4TCCq0wae01s9PuNWzHYoCMkE97e2qdkYthpI0pzC3UGB03lgEHn2XM85hDOUF6qgqqszs+iXU4UA=="
                     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+                <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
                 <script>
                     let index = 0; // Initialize the index counter
                     function addOption() {
@@ -176,6 +242,56 @@
                             }
                         }
                     });
+
+                    function openStopModal() {
+                        const stop_parent = document.getElementsByClassName('add_direct_stop')[0];
+                        stop_parent.classList.remove("d-none");
+                    }
+
+                    function closeStopModal() {
+                        const stop_parent = document.getElementsByClassName('add_direct_stop')[0];
+                        stop_parent.classList.add("d-none");
+                    }
+
+                    // script for ajax stop form submission: 
+                    // Get the form and submit button
+                    const form = document.getElementById('stop-form');
+                    const submitBtn = document.getElementById('submit-btn');
+                    submitBtn.addEventListener('click', (event) => {
+                        event.preventDefault(); // Prevent the default form submission
+
+                        // Create a new FormData object and populate it with the form data
+                        const formData = new FormData(form);
+
+                        // Send an AJAX request
+                        fetch(form.action, {
+                                method: form.method,
+                                body: formData
+                            })
+                            .then(response => {
+                                console.log('Form submitted successfully');
+                                closeStopModal();
+                                getStopsAgain();
+                                swal("Stop Added!", "The stop is added successfully!", "success");
+                            })
+                            .catch(error => {
+                                console.error('An error occurred while submitting the form', error);
+                            });
+                    });
+
+                    function getStopsAgain() {
+                        fetch('http://localhost:8000/test-stops')
+                            .then(response => response.json())
+                            .then(data => {
+                                // Handle the fetched data here
+                                console.log(data);
+                            })
+                            .catch(error => {
+                                // Handle any errors that occur during the fetch
+                                console.error('Error:', error);
+                            });
+
+                    }
                 </script>
 
 

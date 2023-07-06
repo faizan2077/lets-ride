@@ -43,7 +43,7 @@
     }
 
     .tabcontent {
-        animation: fadeEffect 1s;
+        animation: fadeEffect 0.5s;
         /* Fading effect takes 1 second */
     }
 
@@ -77,8 +77,7 @@
             {{-- add side bar --}}
 
             @include('admin.sidebar')
-
-
+            
             <div class="main-panel">
                 <div class="content-wrapper">
                     <!-- Tab links -->
@@ -103,7 +102,7 @@
                                 </div>
 
                                 @if (session()->has('message'))
-                                    <div class="alert alert-danger">
+                                    <div class="alert alert-info">
                                         {{ session()->get('message') }}
                                     </div>
                                 @endif
@@ -113,7 +112,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="card">
-                                            <div class="table-responsive pt-3">
+                                            <div class="table-responsive">
                                                 <table class="table table-striped project-orders-table">
                                                     <thead>
                                                         <tr>
@@ -144,20 +143,20 @@
                                                                 <td>{{ $driver->phone }}</td>
                                                                 <td>{{ $driver->license_number }}</td>
 
+                                                                <td>
+                                                                    <img onclick="viewPic('{{ asset('drivers') }}/{{ $driver->image }}')" style="width:100px; height:100px;"
+                                                                        src="{{ asset('drivers') }}/{{ $driver->image }}" alt="">
+                                                                </td>                                                                
                                                                 <td><img style="width:100px; height:100px;"
-                                                                        src="{{ asset('storage/app/public') }}/{{ $driver->selfie }}"
+                                                                        src="{{ asset('drivers_license') }}/{{ $driver->license_image }}"
                                                                         alt=""></td>
 
                                                                 <td><img style="width:100px; height:100px;"
-                                                                        src="{{ asset('storage/app/public') }}/{{ $driver->license_image }}"
+                                                                        src="{{ asset('front_cnic') }}/{{ $driver->cnic_front }}"
                                                                         alt=""></td>
 
                                                                 <td><img style="width:100px; height:100px;"
-                                                                        src="{{ asset('storage/app/public') }}/{{ $driver->cnic_front }}"
-                                                                        alt=""></td>
-
-                                                                <td><img style="width:100px; height:100px;"
-                                                                        src="{{ asset('storage/app/public') }}/{{ $driver->cnic_back }}"
+                                                                        src="{{ asset('back_cnic') }}/{{ $driver->cnic_back }}"
                                                                         alt=""></td>
 
 
@@ -171,17 +170,13 @@
                                                                         {{ $driver->driver_st == 'available' ? 'checked' : '' }}>
                                                                 </td>
                                                                 <td><a class="btn btn-danger btn-sm btn-icon-text delete-confirm"
-                                                                        href="{{ route('delete-driver', ['id' => $driver->id]) }}"><span class="material-symbols-outlined">
+                                                                        href="{{ route('delete-driver', ['id' => $driver->id]) }}"><span
+                                                                            class="material-symbols-outlined">
                                                                             delete
                                                                         </span></a>
                                                                 </td>
                                                             </tr>
                                                         @endforeach
-
-
-
-
-
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -190,16 +185,14 @@
                                 </div>
                             </div>
 
-
                             {{-- pending driver table start here --}}
                             <div id="pending-driver" class="tabcontent">
-                                <h2>Pending driver</h2>
-
+                                <heading>Pending Drivers</heading>
                                 @php($count = 0)
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="card">
-                                            <div class="table-responsive pt-3">
+                                            <div class="table-responsive">
                                                 <table class="table table-striped project-orders-table">
                                                     <thead>
                                                         <tr>
@@ -229,20 +222,22 @@
                                                                 <td>{{ $driver->email }}</td>
                                                                 <td>{{ $driver->phone }}</td>
                                                                 <td>{{ $driver->license_number }}</td>
+                                                                <td>
+                                                                    <img style="width:100px; height:100px;"
+                                                                        src="{{ asset('drivers') }}/{{ $driver->image }}"
+                                                                        alt="">
+                                                                </td>
+
                                                                 <td><img style="width:100px; height:100px;"
-                                                                        src="{{ asset('storage/app/public') }}/{{ $driver->selfie }}"
+                                                                        src="{{ asset('drivers_license') }}/{{ $driver->license_image }}"
                                                                         alt=""></td>
 
                                                                 <td><img style="width:100px; height:100px;"
-                                                                        src="{{ asset('storage/app/public') }}/{{ $driver->license_image }}"
+                                                                        src="{{ asset('front_cnic') }}/{{ $driver->cnic_front }}"
                                                                         alt=""></td>
 
                                                                 <td><img style="width:100px; height:100px;"
-                                                                        src="{{ asset('storage/app/public') }}/{{ $driver->cnic_front }}"
-                                                                        alt=""></td>
-
-                                                                <td><img style="width:100px; height:100px;"
-                                                                        src="{{ asset('storage/app/public') }}/{{ $driver->cnic_back }}"
+                                                                        src="{{ asset('back_cnic') }}/{{ $driver->cnic_back }}"
                                                                         alt=""></td>
 
                                                                 <td>{{ $driver->total_experience }}</td>
@@ -261,8 +256,6 @@
                                                                 </td>
 
                                                                 <td>
-                                                                    {{-- <a class="btn btn-danger btn-sm" style="margin-top: 5px;"
-            href="{{ route('reject-driver', ['id' => $driver->id]) }}"></i>Reject</a> --}}
                                                                     <a class="btn btn-primary btn-sm"
                                                                         href="{{ route('approve-driver', ['id' => $driver->id]) }}">Approve</a>
 
@@ -272,14 +265,8 @@
 
                                                     </tbody>
                                                 </table>
-                                                {{-- <div class="col-md-12 mb-3">
-<nav class="pagination float-right">{!! $customer->appends(Request::query())->links() !!}</nav>
-</div> --}}
-
-
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>
@@ -288,28 +275,13 @@
                 </div>
             </div>
         </div>
+        @include('admin.footer')
     </div>
     </div>
 
     </div>
     </div>
 
-    <!-- partial -->
-    <!-- main-panel ends -->
-    <!-- page-body-wrapper ends -->
-    <!-- content-wrapper ends -->
-    <!-- partial:partials/_footer.html -->
-    <footer class="footer">
-        <div class="card">
-            <div class="card-body">
-                <div class="d-sm-flex justify-content-center justify-content-sm-between">
-                    <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © Tecjaunt
-                        2022 <a href="https://www.Tecjaunt.com/" class="text-muted" target="_blank">Tecjaunt</a>. All
-                        rights reserved.</span>
-                </div>
-            </div>
-        </div>
-    </footer>
 
 
 
@@ -433,12 +405,15 @@
                     success: function(data) {
                         toastr.options.closeButton = true;
                         toastr.options.closeMethod = 'fadeOut';
-                        toastr.options.closeDuration = 100;
+                        toastr.options.closeDuration = 0;
                         toastr.success(data.message);
                     }
                 });
             });
         });
+        const viewPic = (parameter) => {
+            console.log(parameter)
+        }
     </script>
 </body>
 

@@ -26,6 +26,7 @@ Route::group(['prefix' => 'manage-admin'], function () {
     Route::get('/login', [DashboardController::class, 'Login'])->name('login');
 });
 
+Route::get('/test-stops', [DashboardController::class, 'addAPIForRoutes']);
 
 Route::group(['prefix' => 'manage-admin', 'middleware' => ['auth']], function () {
 

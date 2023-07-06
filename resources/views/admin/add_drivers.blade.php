@@ -48,7 +48,7 @@
                                 @csrf
                                 <div class="form-group">
                                     <label>Driver Name</label>
-                                    <input type="text" name="name" class="form-control"
+                                    <input minlength="3" type="text" name="name" class="form-control"
                                         placeholder="Enter Driver name" required>
                                 </div>
                                 <div class="form-group">
@@ -57,23 +57,24 @@
                                         placeholder="Enter Driver email" required>
                                 </div>
                                 <div class="form-group">
-                                    <label>Driver phone</label>
+                                    <label>Driver Phone</label>
                                     <input type="number" name="phone" class="form-control"
                                         placeholder="Enter Driver phone" required>
                                 </div>
                                 <div class="form-group">
-                                    <label>Driver password</label>
+                                    <label>Driver Password</label>
                                     <input type="password" name="password" class="form-control"
                                         placeholder="Enter Driver password" required>
                                 </div>
                                 <div class="form-group">
-                                    <label>Driver dob</label>
-                                    <input type="date" name="dob" class="form-control"
-                                        placeholder="Enter Driver dob" required>
+                                    <label>Driver DOB</label>
+                                    <input type="date" name="dob" class="form-control " disabled id="age_check"
+                                        required>
                                 </div>
                                 <div class="form-group">
-                                    <label>Driver gender</label>
+                                    <label>Driver Gender</label>
                                     <select name="gender" class="form-control" required>
+                                        <option value="" disabled selected>Choose Gender</option>
                                         <option value="1">Male</option>
                                         <option value="0">Female</option>
                                     </select>
@@ -81,23 +82,32 @@
                                         placeholder="Enter Driver gender" required> --}}
                                 </div>
                                 <div class="form-group">
-                                    <label>Total experience</label>
-                                    <input type="number" name="total_experience" class="form-control"
-                                        placeholder="Enter Driver total_experience" required>
+                                    <label>Total Experience</label>
+                                    <input type="number" min="1" name="total_experience" class="form-control"
+                                        placeholder="Enter Driver Totel Experience" required>
                                 </div>
                                 <div class="form-group">
-                                    <label>License number</label>
+                                    <label>License Number</label>
                                     <input type="text" name="license_number" class="form-control"
                                         placeholder="Enter License number" required>
                                 </div>
                                 <div class="form-group">
-                                    <label>Driver image</label>
-                                    <input type="file" name="image" class="form-control"  required>
+                                    <label>Driver Image</label>
+                                    <input type="file" name="image" class="form-control" required>
                                 </div>
 
                                 <div class="form-group">
-                                    <label>License image</label>
-                                    <input type="file" name="license_image" class="form-control"  required>
+                                    <label>License Image</label>
+                                    <input type="file" name="license_image" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>CNIC Front Image</label>
+                                    <input type="file" name="cnic_front" class="form-control" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>CNIC Back Image</label>
+                                    <input type="file" name="cnic_back" class="form-control" required>
                                 </div>
                                 <div class="form-group ml-4">
                                     <input class="form-check-input" type="checkbox" name="status" value="1"
@@ -106,11 +116,8 @@
                                         Active Status
                                     </label>
                                 </div>
-                                <br>
-                                <br>
-
                                 <div class="form-group">
-                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                    <button type="submit" class="btn btn-primary btn-lg">Submit</button>
                                 </div>
                             </form>
 
@@ -119,5 +126,14 @@
                 </div>
                 @include('admin.footer')
 </body>
+<script>
+    const currentDate = new Date();
+    const maxDate = new Date(currentDate.getFullYear() - 18, currentDate.getMonth(), currentDate.getDate());
+    const maxDateFormatted = maxDate.toISOString().split('T')[0];
+
+    const dateInput = document.getElementById('age_check');
+    dateInput.max = maxDateFormatted;
+    dateInput.disabled = false;
+</script>
 
 </html>

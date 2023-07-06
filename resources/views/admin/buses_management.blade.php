@@ -44,8 +44,7 @@
                                             <tr>
                                                 <th scope="col">Sr.no</th>
                                                 <th scope="col">Bus number</th>
-                                                <th scope="col">Starting Point</th>
-                                                <th scope="col">Bus ending point</th>
+                                                <th scope="col">Route</th>
                                                 <th scope="col">Airconditioned</th>
                                                 <th scope="col">Driver Assigned</th>
                                                 <th scope="col">Action</th>
@@ -58,9 +57,7 @@
                                                 <tr>
                                                     <td>{{ $count }}</td>
                                                     <td>{{ $data->registration_no }}</td>
-                                                    <td>{{ $data->starting_point ? $data->starting_point : 'N/A' }}
-                                                    </td>
-                                                    <td>{{ $data->ending_point ? $data->ending_point : 'N/A' }}</td>
+                                                    <td>{{ $data->current_route_id ? $data->current_route_id : 'N/A' }}</td>
                                                     <td>{{ $data->is_airconditioned === 1 ? "Yes" : 'No' }}
                                                     <td>{{ $data->current_driver_id ? $data->current_driver_id : 'N/A' }}
                                                     </td>

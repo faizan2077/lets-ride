@@ -38,10 +38,7 @@
                         <heading>View bus link to route</heading>
                         <div class="col-md-12">
                             <div class="card">
-                                <div class="table-responsive pt-3">
-                                    <div>
-                                    </div>
-
+                                <div class="table-responsive">
                                     @php($count = 0)
                                     <table class="table table-striped project-orders-table">
 
@@ -52,35 +49,40 @@
                                                 <th scope="col">Route Name</th>
                                                 <th scope="col">Driver Name</th>
                                                 <th scope="col">Created at</th>
-                                                <th scope="col">Action</th>
+                                                <th scope="col">Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
 
                                             @php($count = 0)
-                                            @foreach ($newArray as $data)
-                                                @php($count++)
-                                                <tr>
-                                                    <td>{{ $count }}</td>
-                                                    <td>{{ $data->buss_id }}</td>
-                                                    <td>{{ $data->route_id }}</td>
-                                                    <td>{{ $data->driver_id }}</td>
-                                                    <td>{{ $data->created_at }}</td>
-                                                    <td><a class="btn btn-danger btn-sm btn-icon-text delete-confirm"
-                                                            href="{{ route('delete-buss-link-to-route', ['id' => $data->id, 'buss_id' => $data->new_buss_id, 'route_id' => $data->new_route_id, 'driver_id' => $data->new_driver_id]) }}"">
-                                                            <span class="material-symbols-outlined">
-                                                                delete
-                                                            </span>
-                                                        </a>
-                                                    </td>
+                                            @if (empty($newArray))
+                                                <tr class="text-center">
+                                                    <td colspan="6">No data found</td>
                                                 </tr>
-                                            @endforeach
+                                            @else
+                                                @foreach ($newArray as $data)
+                                                    @php($count++)
+                                                    <tr>
+                                                        <td>{{ $count }}</td>
+                                                        <td>{{ $data->buss_id }}</td>
+                                                        <td>{{ $data->route_id }}</td>
+                                                        <td>{{ $data->driver_id }}</td>
+                                                        <td>{{ $data->created_at }}</td>
+                                                        <td>
+                                                            <a class="btn btn-danger btn-sm btn-icon-text delete-confirm"
+                                                                href="{{ route('delete-buss-link-to-route', ['id' => $data->id, 'buss_id' => $data->new_buss_id, 'route_id' => $data->new_route_id, 'driver_id' => $data->new_driver_id]) }}">
+                                                                <span class="material-symbols-outlined">
+                                                                    delete
+                                                                </span>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            @endif
+
 
                                         </tbody>
                                     </table>
-                                    {{-- <div class="col-md-12 mb-3">
-                  <nav class="pagination float-right">{!! $customer->appends(Request::query())->links() !!}</nav>
-              </div> --}}
                                 </div>
                             </div>
                         </div>
@@ -89,17 +91,7 @@
                 </div>
                 <!-- content-wrapper ends -->
                 <!-- partial:partials/_footer.html -->
-                <footer class="footer">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="d-sm-flex justify-content-center justify-content-sm-between">
-                                <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright ©
-                                    Tecjaunt 2022 <a href="https://www.Tecjaunt.com/" class="text-muted"
-                                        target="_blank">Tecjaunt</a>. All rights reserved.</span>
-                            </div>
-                        </div>
-                    </div>
-                </footer>
+                @include('admin.footer')
                 <!-- partial -->
             </div>
             <!-- main-panel ends -->

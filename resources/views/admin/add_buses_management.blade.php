@@ -41,9 +41,9 @@
                                 @csrf
                                 <div class="form-group">
                                     <label>Bus Registeration Number</label>
-                                    <input name="registration_no" type="number" maxlength="4" max="9999"
+                                    <input name="registration_no" type="text" maxlength="15" max="999999999"
                                         min="1" value="{{ old('registration_no') }}" class="form-control"
-                                        placeholder="Enter bus registeration number" oninput="limitInputLength(this, 4)"
+                                        placeholder="Enter bus registeration number" oninput="limitInputLength(this, 15)"
                                         required>
                                     @error('registration_no')
                                         <p class="text-danger p-0 m-0">{{ $message }}</p>

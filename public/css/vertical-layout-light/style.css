@@ -21553,7 +21553,7 @@ select.tt-hint {
   padding: .4375rem .75rem;
   border: 0;
   outline: 1px solid #f3f3f3;
-  color: #c9c8c8;
+  /* color: #c9c8c8; */
 }
 
 select.form-control:focus, .select2-container--default select.select2-selection--single:focus, .select2-container--default .select2-selection--single select.select2-search__field:focus, select.typeahead:focus,
@@ -24144,6 +24144,30 @@ div.tagsinput span.tag a {
   border-radius: 6px;
   border: 1px solid #e4e4f4;
 }
+/* .sidebar {
+  background: #ffffff;
+  height: 85vh;
+  overflow-y: scroll;
+  position: fixed;
+  font-family: "Poppins", sans-serif;
+  font-weight: normal;
+  padding: 0;
+  right: 0;
+  width: 236px;
+  z-index: 11;
+  transition: width 0.25s ease, background 0.25s ease;
+  -webkit-transition: width 0.25s ease, background 0.25s ease;
+  -moz-transition: width 0.25s ease, background 0.25s ease;
+  -ms-transition: width 0.25s ease, background 0.25s ease;
+  box-shadow: 0 5px 10px 0 rgba(230, 230, 243, 0.88);
+  -webkit-box-shadow: 0 5px 10px 0 rgba(230, 230, 243, 0.88);
+  -moz-box-shadow: 0 5px 10px 0 rgba(230, 230, 243, 0.88);
+  -ms-box-shadow: 0 5px 10px 0 rgba(230, 230, 243, 0.88);
+  margin-left: 0.5rem;
+  margin-bottom: 2.062rem;
+  border-radius: 6px;
+  border: 1px solid #e4e4f4;
+} */
 
 .sidebar .nav {
   overflow: hidden;
@@ -24408,7 +24432,7 @@ div.tagsinput span.tag a {
 }
 
 .navbar .navbar-brand-wrapper {
-  background: #b88dff;
+  background: white;
   transition: width 0.25s ease, background 0.25s ease;
   -webkit-transition: width 0.25s ease, background 0.25s ease;
   -moz-transition: width 0.25s ease, background 0.25s ease;

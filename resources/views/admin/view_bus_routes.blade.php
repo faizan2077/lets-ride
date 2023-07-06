@@ -75,7 +75,7 @@
                                                             href="{{ route('edit-routes', ['id' => $route->id]) }}"><span class="material-symbols-outlined">
                                                                 edit
                                                                 </span></a>
-                                                        <a class="btn btn-danger btn-sm btn-icon-text delete-confirm"
+                                                        <a class="btn btn-danger btn-sm btn-icon-text"
                                                             href="{{ route('delete-routes', ['id' => $route->id]) }}"><span class="material-symbols-outlined">
                                                                 delete
                                                             </span></a>

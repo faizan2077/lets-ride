@@ -69,9 +69,8 @@
                                                     {{-- <td>{{ $routes->status }}</td> --}}
                                                     {{-- <td>{{ $routes->created_at }}</td> --}}
                                                     {{-- <td><a class="btn btn-danger btn-sm btn-icon-text delete-confirm" href="{{ route('delete-route-stops', ['route_id' => $routes->route_id]) }}"><i class="typcn typcn-delete-outline btn-icon-append" >Delete</i></a></td> --}}
-                                                    <td><a class="btn btn-primary btn-sm btn-icon-text"
-                                                            href="{{ route('routeStops', ['route_id' => $routes->route_id]) }}">View
-                                                            Route Stops</a></td>
+                                                    <td><a href="{{ route('routeStops', ['route_id' =>$routes->route_id]) }}" class="btn btn-primary btn-sm btn-icon-text" >View Route Stops</a>
+                                                    </td>
                                                 </tr>
                                             @endforeach
 
@@ -89,7 +88,8 @@
                 </div>
                 <!-- content-wrapper ends -->
                 <!-- partial:partials/_footer.html -->
-                <footer class="footer">
+                @include('admin.footer')
+                {{-- <footer class="footer">
                     <div class="card">
                         <div class="card-body">
                             <div class="d-sm-flex justify-content-center justify-content-sm-between">
@@ -99,7 +99,7 @@
                             </div>
                         </div>
                     </div>
-                </footer>
+                </footer> --}}
                 <!-- partial -->
             </div>
             <!-- main-panel ends -->

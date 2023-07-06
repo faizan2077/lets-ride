@@ -72,8 +72,8 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label>Driver</label>
-                                    <select class="form-control text-capitalize" required name="driver_id">
+                                    <label>Driver (optional)</label>
+                                    <select class="form-control text-capitalize" name="driver_id">
                                         <option value="" selected disabled>Please Select Driver</option>
                                         @foreach ($drivers as $driver)
                                            <option value={{ $driver->id }}>{{ $driver->name }}</option>

@@ -101,17 +101,31 @@ class DashboardController extends Controller
         $this->validate($request, [
             'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
             'license_image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'cnic_front' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'cnic_back' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
         // for driver image
         $image = $request->image;
-        $imageName = time() . '.' . $image->Extension();
-        $request->image->storeAs('public/drivers', $imageName);
+        $imageName = '/' . time() . '.' . $image->extension();
+        $path = public_path('drivers');
+        $image->move($path, $imageName);
 
         // for license image
         $license_image = $request->license_image;
-        $licenseImageName = time() . '.' . $license_image->Extension();
-        $request->license_image->storeAs('public/driver license', $licenseImageName);
+        $licenseImageName = time() . '.' . $license_image->extension();
+        $license_image->move('drivers_license', $licenseImageName);
+
+        // cnic front image
+        $cnic_front = $request->cnic_front;
+        $cnic_front_img_name = time() . '.' . $cnic_front->extension();
+        $cnic_front->move('front_cnic', $cnic_front_img_name);
+
+        // cnic back image
+        $cnic_back = $request->cnic_back;
+        $cnic_back_img_name = time() . '.' . $cnic_back->extension();
+        $cnic_back->move('back_cnic', $cnic_back_img_name);
+
 
 
         $driver = new Drivers();
@@ -124,14 +138,18 @@ class DashboardController extends Controller
         $driver->gender = $request->gender;
         $driver->total_experience = $request->total_experience;
         $driver->license_number = $request->license_number;
-        $driver->status = $request->status;
+        $driver->status = $request->input('status') ?? 0;
         $driver->image = $imageName;
+        $driver->cnic_front = $cnic_front_img_name;
+        $driver->cnic_back = $cnic_back_img_name;
         $driver->license_image = $licenseImageName;
 
+        // dd($driver);
         $driver->save();
 
-        return back()->with('message', 'driver add successfully!');
+        return back()->with('message', 'Driver added successfully!');
     }
+
 
     public function viewDriver()
     {
@@ -237,6 +255,11 @@ class DashboardController extends Controller
         $stopList = DB::table("buss_stops")->where('status', 1)->get();
         return view('admin.add_bus_routes', compact('stopList'));
     }
+    public function addAPIForRoutes()
+    {
+        $stopList = DB::table("buss_stops")->where('status', 1)->get();
+        return response()->json(['stauts'=> "success", 'data'=> $stopList ]);
+    }
 
     public function viewRoutes()
     {
@@ -279,7 +302,6 @@ class DashboardController extends Controller
         $get = Routes::find($id);
         if ($get) {
             $get->delete();
-
             return back()->with('message', 'Route deleted sucessfully!');
         } else {
             return back()->with('message', 'not found!');
@@ -382,7 +404,7 @@ class DashboardController extends Controller
     {
         $routes = Routes::where("assigned", 0)->get(['id', 'title']);
         $busses = Busses::where("assigned", 0)->get(['id', 'registration_no']);
-        $drivers = Drivers::where('status', 1)->where('available', 0)->get(['id', 'name']);
+        $drivers = Drivers::where('status', 1)->where('available', 0)->where('driver_st', 'available')->get(['id', 'name']);
         return view('admin.buss_link_to_route', compact('busses', 'routes', 'drivers'));
     }
 
@@ -391,34 +413,35 @@ class DashboardController extends Controller
         $this->validate($request, array(
             'buss_id' => "required|exists:busses,id",
             'route_id' => "required|exists:routes,id",
-            'driver_id' => "required||exists:drivers,id",
+            // 'driver_id' => "required||exists:drivers,id",
         ));
 
         $bussRouteDetail = BussesRouteDetails::where(["buss_id" => $request["buss_id"]])
             ->orWhere(["route_id" => $request["route_id"]])
             ->first();
 
+        if ($bussRouteDetail) {
+            return back()->with('error', 'This route or bus is already occupied. Please cancel its route or try with another combination.');
+        }
+
         $bus = Busses::find($request["buss_id"]);
-        if ($bus) {
+        $routes = Routes::find($request["route_id"]);
+        $driver = Drivers::find($request["driver_id"]);
+
+        if ($bus && $routes) {
             $bus->current_driver_id = $request["driver_id"];
+            $bus->current_route_id = $request["route_id"];
             $bus->assigned = 1;
             $bus->save();
-        }
-        $routes = Routes::find($request["route_id"]);
-        if ($routes) {
             $routes->assigned = 1;
             $routes->save();
         }
-        $driver = Drivers::find($request["driver_id"]);
         if ($driver) {
             $driver->available = 1;
             $driver->save();
         }
 
 
-        if ($bussRouteDetail) {
-            return back()->with('error', 'This route or bus is already occupied. Please cancel its route or try with another combination.');
-        }
 
         if (BussesRouteDetails::create([
             "buss_id" => $request["buss_id"],
@@ -435,7 +458,7 @@ class DashboardController extends Controller
     public function viewBussLinkToRoute()
     {
         $bussRouteDetail = BussesRouteDetails::get();
-        $newArray = []; 
+        $newArray = [];
         foreach ($bussRouteDetail as $index => $busRoute) {
             $bus = Busses::find($busRoute->buss_id);
             if ($bus) {
@@ -472,12 +495,13 @@ class DashboardController extends Controller
     public function deleteBussLinktoRoute(Request $request)
     {
 
-        $specific_bus = Busses::find($request->buss_id)->first();
-        $specific_route = Routes::find($request->route_id)->first();
-        $specific_driver = Drivers::find($request->driver_id)->first();
+        $specific_bus = Busses::find($request->buss_id);
+        $specific_route = Routes::find($request->route_id);
+        $specific_driver = Drivers::find($request->driver_id);
 
         if ($specific_bus && $specific_route && $specific_driver &&  $request->id) {
             $specific_bus->current_driver_id = null;
+            $specific_bus->current_route_id = null;
             $specific_bus->assigned = 0;
             $specific_bus->save();
 
@@ -488,9 +512,10 @@ class DashboardController extends Controller
             $specific_driver->save();
 
             BussesRouteDetails::find($request->id)->delete();
+            return back()->with('message', 'Buss Link to route deleted sucessfully!');
+        } else {
+            return back()->with('message', 'Error while deleteing Link Route!');
         }
-
-        return back()->with('message', 'Buss Link to route deleted sucessfully!');
     }
 
 
