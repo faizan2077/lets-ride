@@ -57,8 +57,20 @@
                                                 <tr>
                                                     <td>{{ $count }}</td>
                                                     <td>{{ $data->registration_no }}</td>
-                                                    <td>{{ $data->current_route_id ? $data->current_route_id : 'N/A' }}</td>
-                                                    <td>{{ $data->is_airconditioned === 1 ? "Yes" : 'No' }}
+                                                    <td>
+                                                        @if ($data->current_route_id)
+                                                            {{ $data->current_route_id }}
+                                                        @else
+                                                            <select onchange="assignRoute('{{$data->id}}')">
+                                                                <option value="" selected disabled>Assign new route from here</option>
+                                                                @foreach ($allRoutes as $item)
+                                                                    <option value={{$item->id}}>{{$item->title}}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        @endif
+                                                    </td>
+
+                                                    <td>{{ $data->is_airconditioned === 1 ? 'Yes' : 'No' }}
                                                     <td>{{ $data->current_driver_id ? $data->current_driver_id : 'N/A' }}
                                                     </td>
                                                     <td>
@@ -149,4 +161,8 @@
                 }
             });
         });
+        
+        function assignRoute(id){
+            console.log(id);
+        }
     </script>

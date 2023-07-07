@@ -5,10 +5,11 @@
 
 @include('admin.top-bar')
 <style>
-    .cursor-pointer{
+    .cursor-pointer {
         cursor: pointer;
     }
 </style>
+
 <body>
 
     <div class="container-scroller">
@@ -45,51 +46,39 @@
                     @endif
 
                     <div class="row">
-                        <heading>Faq's</heading>
+                        <heading>Contact Information</heading>
                         <div class="col-md-12">
                             <div class="card">
                                 <div class="table-responsive pt-3">
-                                    <table class="table table-striped project-orders-table">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">Sr.no</th>
-                                                <th scope="col">Question</th>
-                                                <th scope="col">Answer</th>
-                                                <th scope="col">Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @php($count = 0)
-                                            @foreach ($getFaq as $data)
-                                                @php($count++)
+                                    @if (count($contactData) > 0)
+                                        <table class="table table-striped project-orders-table">
+                                            <thead>
                                                 <tr>
-                                                    <td>{{ $count }}</td>
-                                                    <td>{{ $data->question }}</td>
-                                                    <td>
-                                                        <?php
-                                                        $words = explode(' ', $data->answer);
-                                                        $shortAnswer = implode(' ', array_slice($words, 0, 8));
-                                                        ?>
-                                                        <span >{{$shortAnswer}}</span>
-                                                        <br/>
-                                                        <br/>
-                                                        <a class="btn-link btn-answer cursor-pointer"
-                                                            data-answer="{{ $data->answer }}">view all</a>
-                                                    </td>
-                                                    <td>
-                                                        <a class="btn btn-success btn-sm btn-icon-text"
-                                                            href="{{ route('edit-faq', ['id' => $data->id]) }}">
-                                                            <span class="material-symbols-outlined">edit</span>
-                                                        </a>
-                                                        <a class="btn btn-danger btn-sm btn-icon-text delete-confirm"
-                                                            href="{{ route('delete-faq', ['id' => $data->id]) }}">
-                                                            <span class="material-symbols-outlined">delete</span>
-                                                        </a>
-                                                    </td>
+                                                    <th scope="col">Phone Number</th>
+                                                    <th scope="col">Email</th>
+                                                    <th scope="col">Action</th>
                                                 </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
+                                            </thead>
+                                            <!-- table structure and header omitted for brevity -->
+                                            <tbody>
+                                                @foreach ($contactData as $data)
+                                                    <form  action="{{ route('add-contact-info') }}" method="POST">
+                                                        @csrf
+                                                        <tr>
+                                                            <td><input class="form-control" name="phone" placeholder="Enter phone numnber"
+                                                                    value={{ $data->phone }}></td>
+                                                            <td><input class="form-control" name="email" placeholder="Enter email"
+                                                                    value={{ $data->email }}></td>
+                                                            <td><button class="btn btn-success">Update</button></td>
+                                                        </tr>
+                                                    </form>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    @else
+                                        <p>No data found.</p>
+                                    @endif
+
                                     <!-- Modal -->
                                     <div class="modal" id="answerModal" tabindex="-1" role="dialog"
                                         aria-labelledby="answerModalLabel" aria-hidden="true">
@@ -149,27 +138,3 @@
 
 
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
-<script>
-    $('.delete-confirm').on('click', function(event) {
-        event.preventDefault();
-        const url = $(this).attr('href');
-        swal({
-            title: 'Are you sure?',
-            text: 'This record and it`s details will be permanantly deleted!',
-            icon: 'warning',
-            buttons: ["Cancel", "Yes!"],
-        }).then(function(value) {
-            if (value) {
-                window.location.href = url;
-            }
-        });
-    });
-    $(document).ready(function() {
-        $('.btn-answer').on('click', function() {
-            var answer = $(this).data('answer');
-            $('#modalAnswer').text(answer);
-            $('#answerModal').modal('show');
-        });
-    });
-</script>

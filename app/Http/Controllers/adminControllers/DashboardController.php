@@ -626,6 +626,11 @@ class DashboardController extends Controller
         return back()->with('message', 'Question add successfully!');
     }
 
+    public function getFaqApi(){
+        $getFaq = CustomerFaq::select('id', 'question', 'answer')->get();
+        return response()->json(['status'=> "success",'code'=> 200, 'data'=> $getFaq ]);
+    }
+
     public function deleteFaq($id)
     {
         $deleteFaq = CustomerFaq::find($id)->delete();

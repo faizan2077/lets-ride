@@ -15,19 +15,29 @@ class BusesController extends Controller
     public function busesManagement()
     {
         $buses = Busses::get();
+        $allRoutes = Routes::get();
 
         foreach ($buses as $index => $bus) {
             $busRouteName = Routes::find($bus->current_route_id);
             $driverName = Drivers::find($bus->current_driver_id);
             if ($busRouteName) {
                 $bus->current_route_id = $busRouteName['title'];
+            }else{
+                $bus->current_route_id = null;
+
             }
             if ($driverName) {
                 $bus->current_driver_id = $driverName['name'];
             }
         };
 
-        return view('admin.buses_management', compact('buses'));
+        // dd($buses);
+
+        return view('admin.buses_management', compact('buses', 'allRoutes'));
+    }
+
+    public function  AssignDirectRoute(Request $request){
+        dd($request);
     }
 
     public function AddbusesManagement()

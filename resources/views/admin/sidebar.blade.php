@@ -2,7 +2,7 @@
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
     <ul class="nav">
         <li class="nav-item">
-            <a class="nav-link"  href="{{ route('dashboard') }}">
+            <a class="nav-link" href="{{ route('dashboard') }}">
                 <span class="material-symbols-outlined">
                     dashboard
                 </span>
@@ -51,7 +51,7 @@
                 </ul>
             </div>
         </li> --}}
-       
+
 
         <span class="border"></span>
         <li class="nav-item">
@@ -103,7 +103,7 @@
                 </ul>
             </div>
         </li>
-       
+
         <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#driver-management" aria-expanded="false"
                 aria-controls="driver-management">
@@ -197,40 +197,57 @@
                 </ul>
             </div>
         </li>
-
-
-
         <li class="nav-item">
-            <a class="nav-link" href="{{ route('subscription-details') }}">
-                <span class="material-symbols-outlined">
-                    subscriptions
-                </span>
-                <span class="menu-title px-2">Subscription Details</span>
-            </a>
-        </li>
-
-
-
-
-        <li class="nav-item">
-            <a class="nav-link" href="{{ route('view-faq') }}">
+            <a class="nav-link" data-toggle="collapse" href="#faq" aria-expanded="false" aria-controls="faq">
                 <span class="material-symbols-outlined">
                     forum
                 </span>
-                <span class="menu-title px-2">Customer Faq</span>
+                <span class="menu-title px-2">FAQ's</span>
+                <i class="menu-arrow"></i>
             </a>
+            <div class="collapse" id="faq">
+                <ul class="nav flex-column sub-menu">
+                    <li class="nav-item"> <a class="nav-link" href="{{ route('add-faq') }}">Add FAQ's </a>
+                    <li class="nav-item"> <a class="nav-link" href="{{ route('view-faq') }}">View FAQ</a></li>
         </li>
+    </ul>
+    </div>
+    </li>
 
 
 
-        <li class="nav-item">
-            <a class="nav-link" href="{{ route('contact-us') }}">
-                <span class="material-symbols-outlined">
-                    support
-                </span>
-                <span class="menu-title px-2">Help</span>
-            </a>
-        </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('subscription-details') }}">
+            <span class="material-symbols-outlined">
+                subscriptions
+            </span>
+            <span class="menu-title px-2">Subscription Details</span>
+        </a>
+    </li>
+
+
+
+
+
+
+
+
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('contact-info') }}">
+            {{-- <span class="material-symbols-outlined">
+                contact
+            </span> --}}
+            <span class="menu-title px-2">Contact Info</span>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('contact-us') }}">
+            <span class="material-symbols-outlined">
+                support
+            </span>
+            <span class="menu-title px-2">Help</span>
+        </a>
+    </li>
 
 
 

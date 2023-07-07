@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\adminControllers\BusesController;
+use App\Http\Controllers\adminControllers\ContactController;
 use App\Http\Controllers\adminControllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
@@ -27,6 +28,9 @@ Route::group(['prefix' => 'manage-admin'], function () {
 });
 
 Route::get('/test-stops', [DashboardController::class, 'addAPIForRoutes']);
+Route::get('/faqs', [DashboardController::class, 'getFaqApi']);
+Route::get('/contact-info', [ContactController::class, 'getContactApi']);
+
 
 Route::group(['prefix' => 'manage-admin', 'middleware' => ['auth']], function () {
 
@@ -101,6 +105,7 @@ Route::group(['prefix' => 'manage-admin', 'middleware' => ['auth']], function ()
     Route::get('/buses_management', [BusesController::class, 'busesManagement'])->name('buses-management');
     Route::post('/add_buses_details', [BusesController::class, 'AddBusesDetails'])->name('add_buses_details');
     Route::get('/delete_buss/{id}', [BusesController::class, 'deleteBuss'])->name('delete-buss');
+    Route::get('/assign-direct-route/{id}', [BusesController::class, 'AssignDirectRoute']);
 
     // subscription details
     Route::get('/subscription_details', [DashboardController::class, 'subscriptionDetails'])->name('subscription-details');
@@ -129,6 +134,12 @@ Route::group(['prefix' => 'manage-admin', 'middleware' => ['auth']], function ()
     Route::get('/contact-us', [DashboardController::class, 'contactUs'])->name('contact-us');
     // Logout route
     Route::post('/logout', [DashboardController::class, 'logout'])->name('logoutadmin');
+
+
+    // Route by faizan => contact us
+    Route::get('/contact-info', [ContactController::class, 'getContact'])->name('contact-info');
+    Route::post('/add-contact-info', [ContactController::class, 'addContactInfo'])->name('add-contact-info');
+
 
 
     // new work start here 5/24/2023

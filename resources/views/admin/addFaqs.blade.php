@@ -44,12 +44,10 @@
                                 <div class="form-group">
                                     <label>Question </label>
                                     <input name="question" type="text" class="form-control"
-                                        placeholder="write your question here" required>
+                                        placeholder="Write your question here" required>
                                 </div>
                                 <div class="form-group">
-                                    <label>Answer</label>
-                                    <input name="answer" type="text" class="form-control"
-                                        placeholder="write your answer here" required>
+                                    <label>Answer</label><textarea placeholder="Write answer here" name="answer" type="text" class="form-control" required /></textarea>
                                 </div>
 
                                 <br>
