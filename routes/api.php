@@ -36,7 +36,7 @@ Route::group(["prefix" => "customer", "middleware" => ["appauth"]], function () 
     Route::post('/login', [CustomerController::class, 'login']);
     Route::post('/forget-password', [CustomerController::class, 'forgetPassword']);
     Route::post('/reset-password', [CustomerController::class, 'resetPassword']);
-      Route::post('show-bookings',[BookingsController::class,'showBookings']);
+    Route::post('show-bookings',[BookingsController::class,'showBookings']);
       
      // new api module start here
 
