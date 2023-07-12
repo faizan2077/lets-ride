@@ -3,6 +3,8 @@
 use App\Http\Controllers\adminControllers\BusesController;
 use App\Http\Controllers\adminControllers\ContactController;
 use App\Http\Controllers\adminControllers\DashboardController;
+use App\Http\Controllers\API\Admin\BussesController;
+use App\Http\Controllers\API\DriverController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -34,6 +36,8 @@ Route::get('/contact-info', [ContactController::class, 'getContactApi']);
 
 Route::group(['prefix' => 'manage-admin', 'middleware' => ['auth']], function () {
 
+
+
     //dashboard route
     Route::get('/dashboard', [DashboardController::class, 'Dashboard'])->name('dashboard');
 
@@ -49,6 +53,7 @@ Route::group(['prefix' => 'manage-admin', 'middleware' => ['auth']], function ()
     Route::get('/reject-driver/{id}', [DashboardController::class, 'rejectDriver'])->name('reject-driver');
     Route::get('/available-driver', [DashboardController::class, 'availableDriver'])->name('available-driver');
     Route::get('/delete_driver/{id}', [DashboardController::class, 'deleteDriver'])->name('delete-driver');
+    Route::get('/delete_driver_approve/{id}', [DashboardController::class, 'deleteDriverApprove'])->name('delete_driver_approve');
     // Route::post('/reject-message/{id}',[DashboardController::class,'rejectMessage'])->name('reject-message');
 
     //Bookings routes
@@ -83,6 +88,7 @@ Route::group(['prefix' => 'manage-admin', 'middleware' => ['auth']], function ()
     Route::post('/add_buss_link_to_route', [DashboardController::class, 'addBussLinktoRoute'])->name('add-buss-link-to-route');
     Route::get('/delete_buss_link_to_route/{id}', [DashboardController::class, 'deleteBussLinktoRoute'])->name('delete-buss-link-to-route');
 
+
     // Coupons Details routes
     Route::get('/add-coupons', [DashboardController::class, 'addCoupons'])->name('add-coupons');
     Route::get('/view-coupons', [DashboardController::class, 'viewCoupons'])->name('view-coupons');
@@ -103,9 +109,11 @@ Route::group(['prefix' => 'manage-admin', 'middleware' => ['auth']], function ()
     // route according to use cases
     Route::get('/add_buses_management', [BusesController::class, 'AddbusesManagement'])->name('add-buses-management');
     Route::get('/buses_management', [BusesController::class, 'busesManagement'])->name('buses-management');
+    Route::get('/buses_management2/{id}', [BusesController::class, 'busesManagement'])->name('buses-management2');
     Route::post('/add_buses_details', [BusesController::class, 'AddBusesDetails'])->name('add_buses_details');
     Route::get('/delete_buss/{id}', [BusesController::class, 'deleteBuss'])->name('delete-buss');
-    Route::get('/assign-direct-route/{id}', [BusesController::class, 'AssignDirectRoute']);
+    Route::get('/assign-direct-route/{id}/{parameter}', [BusesController::class, 'AssignDirectRoute'])->name('assign-direct-route');
+    Route::get('/assign-direct-driver/{id}/{parameter}', [BusesController::class, 'AssignDirectDriver'])->name('assign-direct-driver');
 
     // subscription details
     Route::get('/subscription_details', [DashboardController::class, 'subscriptionDetails'])->name('subscription-details');

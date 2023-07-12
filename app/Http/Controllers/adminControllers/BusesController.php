@@ -16,6 +16,8 @@ class BusesController extends Controller
     {
         $buses = Busses::get();
         $allRoutes = Routes::get();
+        $allDrivers = Drivers::get();
+        
 
         foreach ($buses as $index => $bus) {
             $busRouteName = Routes::find($bus->current_route_id);
@@ -23,8 +25,8 @@ class BusesController extends Controller
             if ($busRouteName) {
                 $bus->current_route_id = $busRouteName['title'];
             }else{
+                // $busRouteName->current_route_id  = null;
                 $bus->current_route_id = null;
-
             }
             if ($driverName) {
                 $bus->current_driver_id = $driverName['name'];
@@ -33,11 +35,34 @@ class BusesController extends Controller
 
         // dd($buses);
 
-        return view('admin.buses_management', compact('buses', 'allRoutes'));
+        return view('admin.buses_management', compact('buses', 'allRoutes', 'allDrivers'));
     }
 
     public function  AssignDirectRoute(Request $request){
-        dd($request);
+        $findBus = Busses::find($request['parameter']);
+        if($findBus){
+            $findBus->current_route_id = $request['id'];
+            $findBus->save();
+            $route = Routes::find($request['id']);
+            $route->assigned = 1;
+            $route->save();
+            return response()->json(["status" => 'success', "code" => 200, "data" => $request['id'], "df"=> $findBus]);
+        }else{
+            return response()->json(["status" => 'success', "code" => 404, "message" => "Data not found"]);
+        }
+    }
+    
+    public function  AssignDirectDriver(Request $request){
+        $findBus = Busses::find($request['parameter']);
+        if($findBus){
+            $findBus->current_driver_id = $request['id'];
+            $findBus->save();
+            $thatDriver = Drivers::find( $request['id']);
+            $thatDriver->available = 1;
+            return response()->json(["status" => 'success', "code" => 200, "data" => $request['id'], "df"=> $findBus]);
+        }else{
+            return response()->json(["status" => 'success', "code" => 404, "message" => "Data not found"]);
+        }
     }
 
     public function AddbusesManagement()

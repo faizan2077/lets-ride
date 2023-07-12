@@ -4,7 +4,8 @@
       <div class="card">
           <div class="card-body">
               <div class="d-sm-flex justify-content-center justify-content-sm-between">
-                  <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © Tecjaunt 2022
+                  <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © Tecjaunt <span
+                          id="current_year"></span>
                       <a href="https://www.Tecjaunt.com/" class="text-muted" target="_blank">Tecjaunt</a>. All rights
                       reserved.</span>
               </div>
@@ -18,6 +19,9 @@
   <!-- page-body-wrapper ends -->
   </div>
   <!-- container-scroller -->
+  <script>
+     document.getElementById('current_year').textContent = new Date().getFullYear();
+  </script>
 
   <!-- base:js -->
   <script src="{{ asset('/public/vendors/js/vendor.bundle.base.js') }}"></script>

@@ -234,9 +234,9 @@
 
     <li class="nav-item">
         <a class="nav-link" href="{{ route('contact-info') }}">
-            {{-- <span class="material-symbols-outlined">
-                contact
-            </span> --}}
+            <span class="material-symbols-outlined">
+                contacts
+            </span>
             <span class="menu-title px-2">Contact Info</span>
         </a>
     </li>

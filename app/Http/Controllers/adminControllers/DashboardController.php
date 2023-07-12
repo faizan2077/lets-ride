@@ -195,11 +195,31 @@ class DashboardController extends Controller
 
 
 
+    public function deleteDriverApprove($id)
+    {
+        $driver = Drivers::find($id);
+        $busses = Busses::where('current_driver_id', $id)->get();
+
+        
+        if ($driver) {
+            $driver->delete();
+        }
+        foreach ($busses as $bus) {
+            $bus->current_driver_id = null;
+            $bus->save();
+        }
+        return back()->with('message', 'Driver deleted sucessfully!');
+    }
     public function deleteDriver($id)
     {
         $driver = Drivers::find($id);
-        $driver->delete();
-        return back()->with('message', 'Driver deleted sucessfully!');
+        if ($driver) {
+            $busdriver = Busses::where("current_driver_id", $id);
+            // dd($busdriver);
+            return redirect("manage-admin/buses_management2/$id");
+        }
+        // $driver->delete();
+        // return back()->with('message', 'Driver deleted sucessfully!');
     }
 
     public function addBookings()
@@ -258,7 +278,7 @@ class DashboardController extends Controller
     public function addAPIForRoutes()
     {
         $stopList = DB::table("buss_stops")->where('status', 1)->get();
-        return response()->json(['stauts'=> "success", 'data'=> $stopList ]);
+        return response()->json(['stauts' => "success", 'data' => $stopList]);
     }
 
     public function viewRoutes()
@@ -626,9 +646,10 @@ class DashboardController extends Controller
         return back()->with('message', 'Question add successfully!');
     }
 
-    public function getFaqApi(){
+    public function getFaqApi()
+    {
         $getFaq = CustomerFaq::select('id', 'question', 'answer')->get();
-        return response()->json(['status'=> "success",'code'=> 200, 'data'=> $getFaq ]);
+        return response()->json(['status' => "success", 'code' => 200, 'data' => $getFaq]);
     }
 
     public function deleteFaq($id)

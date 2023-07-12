@@ -4,6 +4,11 @@
 {{-- head add --}}
 
 @include('admin.top-bar')
+<style>
+    .transition-class {
+        transition: background-color 0.5s ease-in-out;
+    }
+</style>
 
 <body>
 
@@ -59,19 +64,55 @@
                                                     <td>{{ $data->registration_no }}</td>
                                                     <td>
                                                         @if ($data->current_route_id)
-                                                            {{ $data->current_route_id }}
-                                                        @else
-                                                            <select onchange="assignRoute('{{$data->id}}')">
-                                                                <option value="" selected disabled>Assign new route from here</option>
+                                                            {{-- {{ $data->current_route_id }} --}}
+                                                            <select class="form-control"
+                                                                onchange="assignRoute('{{ $data->id }}')">
                                                                 @foreach ($allRoutes as $item)
-                                                                    <option value={{$item->id}}>{{$item->title}}</option>
+                                                                    <option
+                                                                        @if ($item->title == $data->current_route_id) selected @endif
+                                                                        value={{ $item->id }}>{{ $item->title }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                        @else
+                                                            <select class="form-control"
+                                                                onchange="assignRoute('{{ $data->id }}')">
+                                                                <option value="" selected disabled>Assign new
+                                                                    route from here</option>
+                                                                @foreach ($allRoutes as $item)
+                                                                    <option value={{ $item->id }}>
+                                                                        {{ $item->title }}</option>
                                                                 @endforeach
                                                             </select>
                                                         @endif
                                                     </td>
 
                                                     <td>{{ $data->is_airconditioned === 1 ? 'Yes' : 'No' }}
-                                                    <td>{{ $data->current_driver_id ? $data->current_driver_id : 'N/A' }}
+                                                        {{-- <td>{{ $data->current_driver_id ? $data->current_driver_id : 'N/A' }} --}}
+                                                    </td>
+                                                    <td>
+                                                        @if ($data->current_driver_id)
+                                                            {{-- {{ $data->current_route_id }} --}}
+                                                            <select class="form-control drivers"
+                                                                onchange="assignDriver('{{ $data->id }}')">
+                                                                @foreach ($allDrivers as $item)
+                                                                    <option
+                                                                        @if ($item->name == $data->current_driver_id) selected @endif
+                                                                        value={{ $item->id }}>{{ $item->name }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                        @else
+                                                            <select class="form-control"
+                                                                onchange="assignDriver('{{ $data->id }}')">
+                                                                <option value="" selected disabled>Assign driver
+                                                                    from here</option>
+                                                                @foreach ($allDrivers as $item)
+                                                                    <option value={{ $item->id }}>
+                                                                        {{ $item->name }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        @endif
                                                     </td>
                                                     <td>
                                                         <a class="btn btn-danger btn-sm btn-icon-text delete-confirm"
@@ -97,17 +138,7 @@
                 </div>
                 <!-- content-wrapper ends -->
                 <!-- partial:partials/_footer.html -->
-                <footer class="footer">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="d-sm-flex justify-content-center justify-content-sm-between">
-                                <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright ©
-                                    Tecjaunt 2022 <a href="https://www.Tecjaunt.com/" class="text-muted"
-                                        target="_blank">Tecjaunt</a>. All rights reserved.</span>
-                            </div>
-                        </div>
-                    </div>
-                </footer>
+                @include('admin.footer')
                 <!-- partial -->
             </div>
             <!-- main-panel ends -->
@@ -161,8 +192,98 @@
                 }
             });
         });
-        
-        function assignRoute(id){
-            console.log(id);
+
+        function assignRoute(parameter) {
+            const id = event.target.value;
+            const url = '{{ route('assign-direct-route', [':id', ':parameter']) }}';
+            const apiUrl = url.replace(':id', id).replace(':parameter', parameter);
+
+            if (id && parameter) {
+                fetch(apiUrl, {
+                        method: 'get',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    })
+                    .then(response => {
+                        console.log(response)
+                    })
+                    .catch(error => {
+                        // Handle any errors
+                        console.error('Error:', error);
+                    });
+            } else {
+                console.log("No id");
+            }
         }
+
+        function assignDriver(parameter) {
+            const id = event.target.value;
+            const url = '{{ route('assign-direct-driver', [':id', ':parameter']) }}';
+            const apiUrl = url.replace(':id', id).replace(':parameter', parameter);
+
+            if (id && parameter) {
+                fetch(apiUrl, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    })
+                    .then(response => {
+                        console.log(response)
+                    })
+                    .catch(error => {
+                        // Handle any errors
+                        console.error('Error:', error);
+                    });
+            } else {
+                console.log("No id");
+            }
+        }
+        const url_id = window.location.pathname.split('/')[3];
+        const drivers = document.getElementsByClassName('drivers');
+        [...drivers].forEach(driveroptions => {
+            [...driveroptions].forEach(element => {
+                if (element.value == url_id && element.selected) {
+                    driveroptions.style.backgroundColor = "red";
+                    setTimeout(function() {
+                        driveroptions.style.backgroundColor = "";
+                        swal({
+                            title: 'Are you sure?',
+                            text: 'Driver is assigned to the bus, do you really want to delete it?',
+                            icon: 'warning',
+                            buttons: ["Cancel", "Yes!"],
+                        }).then(res => {
+                            if (res) {
+                                const url =
+                                    '{{ route('delete_driver_approve', [':id']) }}';
+                                // Replace ':id' in the URL with the actual driver ID
+                                const deleteUrl = url.replace(':id', element.value);
+
+                                // Make an HTTP request to the deleteUrl
+                                fetch(deleteUrl, {
+                                        method: 'GET'
+                                    })
+                                    .then(response => {
+                                        console.log(response);
+                                        // Check the response status
+                                        if (response.ok) {
+                                            alert("Driver deleted successfully");
+                                        } else {
+                                            alert("Failed to delete the driver");
+                                        }
+                                    })
+                                    .catch(error => {
+                                        console.error('Error:', error);
+                                    });
+                            } else {
+                            }
+                        });
+                    }, 3000);
+                }
+
+            });
+        });
+
+        console.log(url);
     </script>

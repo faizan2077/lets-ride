@@ -62,13 +62,15 @@
                                             <!-- table structure and header omitted for brevity -->
                                             <tbody>
                                                 @foreach ($contactData as $data)
-                                                    <form  action="{{ route('add-contact-info') }}" method="POST">
+                                                    <form action="{{ route('add-contact-info') }}" method="POST">
                                                         @csrf
                                                         <tr>
-                                                            <td><input class="form-control" name="phone" placeholder="Enter phone numnber"
+                                                            <td><input class="form-control" name="phone"
+                                                                    placeholder="Enter phone numnber"
                                                                     value={{ $data->phone }}></td>
-                                                            <td><input class="form-control" name="email" placeholder="Enter email"
-                                                                    value={{ $data->email }}></td>
+                                                            <td><input class="form-control" name="email"
+                                                                    placeholder="Enter email" value={{ $data->email }}>
+                                                            </td>
                                                             <td><button class="btn btn-success">Update</button></td>
                                                         </tr>
                                                     </form>
@@ -76,7 +78,18 @@
                                             </tbody>
                                         </table>
                                     @else
-                                        <p>No data found.</p>
+                                        <div>
+                                            <h4 class="px-5 pt-2">Add Contact Info</h4>
+                                            <form action="{{ route('add-contact-info') }}" method="POST">
+                                                @csrf
+                                                <div class="row p-4">
+                                                    <div class="col-6 px-4"> <input class="form-control shadow-sm" name="phone"
+                                                            placeholder="Enter phone number" required></div>
+                                                    <div class="col-6 px-4"><input class="form-control shadow-sm" name="email"
+                                                            placeholder="Enter email" type="email" required></div>
+                                                    <button class="btn btn-success ml-4 mt-4">Add</button </div>
+                                            </form>
+                                        </div>
                                     @endif
 
                                     <!-- Modal -->
@@ -97,6 +110,7 @@
                                             </div>
                                         </div>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
@@ -105,9 +119,14 @@
                 </div>
                 <!-- content-wrapper ends -->
                 <!-- partial:partials/_footer.html -->
-                @include('admin.footer')
                 <!-- partial -->
+                @if (count($contactData) > 0)
+                @include('admin.footer')
+                @endif
             </div>
+            @if (count($contactData) === 0)
+                @include('admin.footer')
+                @endif
             <!-- main-panel ends -->
         </div>
         <!-- page-body-wrapper ends -->
