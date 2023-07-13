@@ -35,47 +35,13 @@ return [
     |
     */
 
-    // 'guards' => [
-    //     'web' => [
-    //         'driver' => 'session',
-    //         'provider' => 'users',
-    //     ],
-    // ],
     'guards' => [
         'web' => [
             'driver' => 'session',
-            'provider' => 'customers',
-        ],
-        'web' => [
-            'driver' => 'session',
-            'provider' => 'drivers',
-        ],
-        'web' => [
-            'driver' => 'session',
             'provider' => 'users',
-        ],
-        'api' => [
-            'driver' => 'token',
-            'provider' => 'users',
-        ],
-
-        'api' => [
-            'driver' => 'session',
-            'provider' => 'customers',
-        ],
-        'driverapi' => [
-            'driver' => 'session',
-            'provider' => 'drivers',
-        ],
-        'customer' => [
-            'driver' => 'passport',
-            'provider' => 'customers',
-        ],
-        'driver' => [
-            'driver' => 'passport',
-            'provider' => 'drivers',
         ],
     ],
+
     /*
     |--------------------------------------------------------------------------
     | User Providers

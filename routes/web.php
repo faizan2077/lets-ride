@@ -18,6 +18,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/get', function () {
+    return "Hello Sadia";
+});
 Route::get('/login', function () {
     return redirect("/manage-admin/login");
 });
@@ -34,8 +37,9 @@ Route::get('/faqs', [DashboardController::class, 'getFaqApi']);
 Route::get('/contact-info', [ContactController::class, 'getContactApi']);
 
 
-Route::group(['prefix' => 'manage-admin', 'middleware' => ['auth']], function () {
+Route::group(['prefix' => 'manage-admin'], function () {
 
+    
 
 
     //dashboard route
